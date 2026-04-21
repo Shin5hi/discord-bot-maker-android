@@ -27,7 +27,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 enum class LogLevel(val label: String, val color: Color, val prefix: String) {
-    INFO("INFO", AppColors.Success, "▸"), WARN("WARN", AppColors.Warning, "⚠"), ERROR("ERROR", AppColors.Error, "✖"), DEBUG("DEBUG", AppColors.Info, "⊙"), SYSTEM("SYS", AppColors.Primary, "◆")
+    INFO("INFO", AppColors.Success, "\u25b8"),
+    WARN("WARN", AppColors.Warning, "\u26a0"),
+    ERROR("ERROR", AppColors.Error, "\u2716"),
+    DEBUG("DEBUG", AppColors.Primary, "\u2299"),
+    SYSTEM("SYS", AppColors.Primary, "\u25c6")
 }
 
 data class LogEntry(val id: Long, val timestamp: String, val level: LogLevel, val source: String, val message: String)
@@ -40,11 +44,18 @@ class LiveConsoleViewModel {
     private val _autoScroll = MutableStateFlow(true)
     val autoScroll: StateFlow<Boolean> = _autoScroll
     private var nextId: Long = 0L
-    fun appendLog(level: LogLevel, source: String, message: String) { _logs.value = _logs.value + LogEntry(nextId++, getCurrentTimestamp(), level, source, message) }
+
+    fun appendLog(level: LogLevel, source: String, message: String) {
+        val entry = LogEntry(id = nextId++, timestamp = getCurrentTimestamp(), level = level, source = source, message = message)
+        _logs.value = _logs.value + entry
+    }
     fun clearLogs() { _logs.value = emptyList() }
     fun setConnected(connected: Boolean) { _isConnected.value = connected }
     fun toggleAutoScroll() { _autoScroll.value = !_autoScroll.value }
-    private fun getCurrentTimestamp(): String { val sdf = java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US); return sdf.format(java.util.Date(System.currentTimeMillis())) }
+    private fun getCurrentTimestamp(): String {
+        val sdf = java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US)
+        return sdf.format(java.util.Date(System.currentTimeMillis()))
+    }
 }
 
 @Composable
@@ -53,12 +64,16 @@ fun LiveConsoleScreen(viewModel: LiveConsoleViewModel) {
     val isConnected by viewModel.isConnected.collectAsState()
     val autoScroll by viewModel.autoScroll.collectAsState()
     val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(logs.size, autoScroll) { if (autoScroll && logs.isNotEmpty()) listState.animateScrollToItem(logs.lastIndex) }
     Column(modifier = Modifier.fillMaxSize().background(AppColors.Background)) {
-        ConsoleHeader(isConnected, autoScroll, logs.size, { viewModel.toggleAutoScroll() }, { viewModel.clearLogs() })
-        Card(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 4.dp), shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(containerColor = AppColors.Surface), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
-            if (logs.isEmpty()) EmptyConsoleState()
-            else LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(8.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) { items(items = logs, key = { it.id }) { entry -> LogEntryRow(entry) } }
+        ConsoleHeader(isConnected = isConnected, autoScroll = autoScroll, logCount = logs.size, onToggleAutoScroll = { viewModel.toggleAutoScroll() }, onClearLogs = { viewModel.clearLogs() })
+        Card(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 4.dp), shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(containerColor = AppColors.InputBackground), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
+            if (logs.isEmpty()) { EmptyConsoleState() } else {
+                LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(8.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    items(items = logs, key = { it.id }) { entry -> LogEntryRow(entry) }
+                }
+            }
         }
     }
 }
@@ -66,7 +81,7 @@ fun LiveConsoleScreen(viewModel: LiveConsoleViewModel) {
 @Composable
 private fun ConsoleHeader(isConnected: Boolean, autoScroll: Boolean, logCount: Int, onToggleAutoScroll: () -> Unit, onClearLogs: () -> Unit) {
     val statusColor by animateColorAsState(targetValue = if (isConnected) AppColors.Success else AppColors.Error, animationSpec = tween(500), label = "statusColor")
-    Surface(color = AppColors.Surface, tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
+    Surface(color = AppColors.Surface, tonalElevation = 0.dp, modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Live Console", color = AppColors.TextPrimary, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -78,8 +93,8 @@ private fun ConsoleHeader(isConnected: Boolean, autoScroll: Boolean, logCount: I
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "$logCount", color = AppColors.TextSecondary, fontSize = 12.sp)
                 Spacer(Modifier.width(12.dp))
-                IconButton(onClick = onToggleAutoScroll, modifier = Modifier.size(32.dp)) { Text(text = if (autoScroll) "⇊" else "⇈", color = if (autoScroll) AppColors.Primary else AppColors.TextSecondary, fontSize = 16.sp) }
-                IconButton(onClick = onClearLogs, modifier = Modifier.size(32.dp)) { Text(text = "⌫", color = AppColors.Error, fontSize = 16.sp) }
+                IconButton(onClick = onToggleAutoScroll, modifier = Modifier.size(32.dp)) { Text(text = if (autoScroll) "\u21ca" else "\u21c8", color = if (autoScroll) AppColors.Primary else AppColors.TextSecondary, fontSize = 16.sp) }
+                IconButton(onClick = onClearLogs, modifier = Modifier.size(32.dp)) { Text(text = "\u232b", color = AppColors.Error, fontSize = 16.sp) }
             }
         }
     }
@@ -96,16 +111,16 @@ private fun LogEntryRow(entry: LogEntry) {
         append(" ")
         withStyle(SpanStyle(color = AppColors.TextPrimary, fontSize = 12.sp)) { append(entry.message) }
     }
-    Text(text = annotated, fontFamily = FontFamily.Monospace, modifier = Modifier.fillMaxWidth().padding(vertical = 1.dp))
+    Text(text = annotated, fontFamily = FontFamily.SansSerif, modifier = Modifier.fillMaxWidth().padding(vertical = 1.dp))
 }
 
 @Composable
 private fun EmptyConsoleState() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "◉", color = AppColors.TextMuted, fontSize = 48.sp)
+            Text(text = "\ud83d\udcdf", fontSize = 48.sp)
             Spacer(Modifier.height(12.dp))
-            Text(text = "Waiting for log stream…", color = AppColors.TextSecondary, fontSize = 14.sp)
+            Text(text = "Waiting for log stream\u2026", color = AppColors.TextSecondary, fontSize = 14.sp)
             Spacer(Modifier.height(4.dp))
             Text(text = "Connect to your bot's backend to begin.", color = AppColors.TextMuted, fontSize = 12.sp)
         }

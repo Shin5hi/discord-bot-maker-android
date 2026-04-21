@@ -32,17 +32,22 @@ data class BotStatus(
     val botName: String = "MyDiscordBot",
     val serverCount: Int = 0,
     val memberCount: Int = 0,
-    val uptimeFormatted: String = "—",
+    val uptimeFormatted: String = "\u2014",
     val ping: Int = 0
 )
 
-private data class ModuleCard(val title: String, val icon: String, val description: String, val accentColor: Color)
+private data class ModuleCard(
+    val title: String,
+    val icon: String,
+    val description: String,
+    val accentColor: Color
+)
 
 private val modules = listOf(
-    ModuleCard("Live Console", "📟", "Real-time log stream with color-coded severity levels.", AppColors.Primary),
-    ModuleCard("AI AutoMod", "🛡️", "Gemini-powered toxicity filter, spam & link protection.", AppColors.Warning),
-    ModuleCard("Command Builder", "⚡", "Visual slash-command editor with embed & meme support.", AppColors.Info),
-    ModuleCard("Launch New Bot", "🚀", "Connect token, configure & deploy a new bot instance.", AppColors.Success)
+    ModuleCard("Live Console", "\ud83d\udcdf", "Real-time log stream with color-coded severity levels.", AppColors.Primary),
+    ModuleCard("AI AutoMod", "\ud83d\udee1\ufe0f", "Gemini-powered toxicity filter, spam & link protection.", AppColors.Warning),
+    ModuleCard("Command Builder", "\u26a1", "Visual slash-command editor with embed & meme support.", AppColors.Primary),
+    ModuleCard("Launch New Bot", "\ud83d\ude80", "Connect token, configure & deploy a new bot instance.", AppColors.Success)
 )
 
 @Composable
@@ -54,7 +59,9 @@ fun MainDashboardScreen(
     onNavigateToBotCreation: () -> Unit = {}
 ) {
     val callbacks = listOf(onNavigateToConsole, onNavigateToAutoMod, onNavigateToCommandBuilder, onNavigateToBotCreation)
-    Column(modifier = Modifier.fillMaxSize().background(AppColors.Background).verticalScroll(rememberScrollState())) {
+    Column(
+        modifier = Modifier.fillMaxSize().background(AppColors.Background).verticalScroll(rememberScrollState())
+    ) {
         DashboardHeader()
         Spacer(Modifier.height(8.dp))
         BotStatusCard(botStatus)
@@ -69,23 +76,23 @@ fun MainDashboardScreen(
 
 @Composable
 private fun DashboardHeader() {
-    Surface(color = AppColors.Surface, tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
+    Surface(color = AppColors.Surface, tonalElevation = 0.dp, modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Dashboard", color = AppColors.TextPrimary, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
-            Text(text = "⚙", color = AppColors.TextSecondary, fontSize = 20.sp)
+            Text(text = "\u2699", color = AppColors.TextSecondary, fontSize = 20.sp)
         }
     }
 }
 
 @Composable
 private fun BotStatusCard(status: BotStatus) {
-    val statusColor by animateColorAsState(targetValue = if (status.isOnline) AppColors.Success else AppColors.Error, animationSpec = tween(500), label = "statusColor")
+    val statusColor by animateColorAsState(targetValue = if (status.isOnline) AppColors.Success else AppColors.Error, animationSpec = tween(durationMillis = 500), label = "statusColor")
     val pulseTransition = rememberInfiniteTransition(label = "pulse")
     val pulseAlpha by pulseTransition.animateFloat(initialValue = 0.4f, targetValue = 1f, animationSpec = infiniteRepeatable(animation = tween(1000, easing = LinearEasing), repeatMode = RepeatMode.Reverse), label = "pulseAlpha")
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), shape = RoundedCornerShape(12.dp), colors = CardDefaults.cardColors(containerColor = AppColors.Surface), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(containerColor = AppColors.Surface), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "🤖", fontSize = 24.sp)
+                Text(text = "\ud83e\udd16", fontSize = 24.sp)
                 Spacer(Modifier.width(10.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = status.botName, color = AppColors.TextPrimary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
@@ -103,9 +110,9 @@ private fun BotStatusCard(status: BotStatus) {
             HorizontalDivider(color = AppColors.Divider, thickness = 1.dp)
             Spacer(Modifier.height(12.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                StatItem("Servers", "${status.serverCount}", AppColors.Primary)
-                StatItem("Members", "${status.memberCount}", AppColors.Info)
-                StatItem("Ping", "${status.ping}ms", AppColors.Warning)
+                StatItem(label = "Servers", value = "${status.serverCount}", color = AppColors.Primary)
+                StatItem(label = "Members", value = "${status.memberCount}", color = AppColors.Primary)
+                StatItem(label = "Ping", value = "${status.ping}ms", color = AppColors.Warning)
             }
         }
     }
@@ -125,8 +132,8 @@ private fun ModuleGrid(cards: List<ModuleCard>, callbacks: List<() -> Unit>) {
         for (row in cards.chunked(2)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 for (card in row) {
-                    val idx = cards.indexOf(card)
-                    ModuleCardItem(card, callbacks.getOrElse(idx) { {} }, Modifier.weight(1f))
+                    val globalIndex = cards.indexOf(card)
+                    ModuleCardItem(card = card, onClick = callbacks.getOrElse(globalIndex) { {} }, modifier = Modifier.weight(1f))
                 }
                 if (row.size == 1) Spacer(modifier = Modifier.weight(1f))
             }
@@ -136,7 +143,7 @@ private fun ModuleGrid(cards: List<ModuleCard>, callbacks: List<() -> Unit>) {
 
 @Composable
 private fun ModuleCardItem(card: ModuleCard, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Card(modifier = modifier.aspectRatio(1f).clickable(onClick = onClick), shape = RoundedCornerShape(12.dp), colors = CardDefaults.cardColors(containerColor = AppColors.Surface), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
+    Card(modifier = modifier.aspectRatio(1f).clickable(onClick = onClick), shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(containerColor = AppColors.Surface), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
         Column(modifier = Modifier.fillMaxSize().padding(14.dp), verticalArrangement = Arrangement.SpaceBetween) {
             Column {
                 Text(text = card.icon, fontSize = 28.sp)
