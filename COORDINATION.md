@@ -60,13 +60,62 @@ All screens follow the official Discord Web/App dark theme aesthetic, implemente
 
 ---
 
+## Migration Status
+
+### Repository Migration — Awaiting Org Permissions
+The project currently lives under a personal fork (`Shin5hi/discord-bot-maker-android`). Migration to the target organization repository is **pending** — we are waiting for organization admin permissions to be granted before transferring the repo or opening PRs against the org's upstream.
+
+**Current blockers:**
+- Org-level write/push access has not been provisioned yet.
+- Branch protection rules on the target org repo require review approvals we cannot self-approve.
+
+**What to do once permissions are granted:**
+1. Fork from the org repo (or request a direct push branch).
+2. Open a PR with all current work from `main`.
+3. Resolve any CI/lint checks the org repo enforces.
+4. Archive or redirect the personal fork once merged.
+
+Until then, all development continues on `Shin5hi/discord-bot-maker-android` (branch: `main`).
+
+---
+
+## Stats Dashboard Module (2026-04-21)
+
+### Overview
+New `StatsDashboardScreen` added to provide a real-time overview of bot performance metrics.
+
+### File: `ui/StatsDashboardScreen.kt`
+- **Package:** `com.discordbotmaker.android.ui.stats`
+- **Route:** `stats_dashboard` (registered in `AppNavigation.kt` via `AppRoutes.STATS_DASHBOARD`)
+- **Data models:** `BotStats` (totalServers, totalUsers, activeCommands, uptimeFormatted), `ActivityDataPoint` (label, value)
+
+### UI Components
+| Component | Description |
+|-----------|-------------|
+| `StatsHeader` | Flat `Surface` header (`0.dp` tonalElevation) with title and subtitle |
+| `StatsCardGrid` | 2×2 grid of stat cards — Total Servers, Total Users, Active Commands, Uptime |
+| `StatCard` | Individual metric card: icon in 12% alpha tinted box, large value text, accent underline bar |
+| `ActivityChart` | Compose `Canvas` line chart with animated draw-in, filled area under curve, grid lines, data point dots, x-axis labels, and legend |
+| `SummaryCard` | Quick summary rows: avg users/server, commands available, status, uptime |
+
+### Design Compliance
+- All colors from `AppColors.*` — no inline hex.
+- Cards: `0.dp` elevation, `8.dp` rounded corners.
+- Chart background uses `InputBackground` (`#1E1F22`).
+- Line/dots/fill use `Primary` (Blurple `#5865F2`).
+- Header: `Surface` background, `0.dp` tonalElevation.
+- Typography: `FontFamily.SansSerif` only — no Monospace.
+
+---
+
 ## File Ownership
 
 | File | Owner | Status |
 |------|-------|--------|
 | `ui/AppTheme.kt` | UI | ✅ Active — Discord Design Language palette |
 | `ui/MainDashboardScreen.kt` | UI | ✅ Active — Discord style |
-| `ui/AppNavigation.kt` | UI | ✅ Active |
+| `ui/AppNavigation.kt` | UI | ✅ Active — includes Stats route |
+| `ui/StatsDashboardScreen.kt` | UI | ✅ Active — Discord style, Canvas line chart |
 | `LiveConsoleScreen.kt` | UI | ✅ Active — SansSerif logs, InputBackground body |
 | `AutoModScreen.kt` | UI | ✅ Active — Discord style |
 | `BotCreationScreen.kt` | UI | ✅ Active — Discord style |
