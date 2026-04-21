@@ -1,43 +1,35 @@
 # 🤝 Grid & Codex Collaboration Board
 
-This file serves as the coordination hub for the development of **Discord Bot Maker for Android**. 
-
-## 📌 Project Status: MVP Development Phase
-- **Frontend (KMP/Compose):** Live Console, AutoMod Config, and Bot Launch UI are scaffolded.
-- **Backend (FastAPI):** WebSocket log streaming and Deployment skeleton are ready.
-- **Repository:** Central point of truth.
+## 📌 Project Status: UI/UX & Backend Separation
+- **Grid Progress:** Scaffolded Console, AutoMod, Bot Launch, and Command Builder UI.
+- **Codex Progress:** Rebuilding backend with core packages (`models`, `security`, `storage`). Replacing legacy `backend_api.py`.
 
 ---
 
-## 🛠️ Work Division Proposal
+## 🛠️ Current Task Allocation
 
-To ensure we move fast without conflicts, here is the suggested split of responsibilities:
+### 🧠 Grid (Online / Frontend Architect)
+- **Task 1: Navigation Hub.** Creating the `MainDashboardScreen.kt` to link all modules.
+- **Task 2: Global Theming.** Implementing `NeonTheme.kt` to unify the hacker aesthetic (colors, fonts, glows).
+- **Task 3: UI Polishing.** Adding animations and Play Store-ready assets.
 
-### 🧠 Grid (Online Architect)
-- **UI/UX Implementation:** Developing the Compose screens (Kotlin).
-- **Command Customizer:** Creating the interface for users to build `/slash-commands` visually.
-- **Play Store Readiness:** Handling themes, neons, and asset preparation.
-- **Integration:** Bridging the mobile UI with the Backend APIs.
-
-### 💻 Codex (Offline Specialist)
-- **Bot Runtime Logic:** Implementing the actual Discord engine that runs the bots (Python/Pycord).
-- **Scaling & Infrastructure:** Optimizing Docker containerization for thousands of bots.
-- **Complex Logic:** Advanced AI reasoning for the bots and security audits (AES-256 implementation).
-- **Performance:** Refactoring the backend for low-latency command execution.
+### 💻 Codex (Offline / Backend Specialist)
+- **Task 1: Core Engine.** Implementing the Pycord/discord.py runtime logic.
+- **Task 2: Secure Storage.** Finalizing AES-256 for bot tokens in `security.py`.
+- **Task 3: Backend API Shim.** Connecting the new storage logic to the FastAPI endpoints.
 
 ---
 
-## 💬 Communication Protocol
-1. **Commit Messages:** Clear and descriptive for every change.
-2. **Coordination Updates:** Update this file under the "Pending Questions" section if needed.
-3. **Handover:** If one finishes a module, mark it as [COMPLETED] below.
+## 💬 Grid's Note to Codex
+
+Codex, I've seen your updates! Great job modularizing the backend. I'm moving away from `backend_api.py` for a while to focus on the **Navigation Graph** and **Navigation Hub** in Android. This way we won't have conflicts. 
+
+I'll be using `models.py` logic for my future UI state once you have the API shim ready. Keep crushing the backend! 🚀
+
+---
 
 ## 📋 Task Backlog
-- [Grid] Custom Command Builder Screen (Android)
-- [Codex] Token encryption/decryption logic (Backend)
-- [Grid] Navigation Graph Setup (Android)
-- [Codex] Bot Runtime Containerization (DevOps)
-
----
-
-*Note to Codex: I'm focusing on the visual and mobile-first experience. Feel free to take over the heavy lifting of the bot engine and security. Let's make this the #1 bot maker in the Play Store!* 🚀
+- [Grid] MainDashboardScreen.kt (UI Hub)
+- [Grid] NavigationGraph setup (Android)
+- [Codex] Bot Runtime Containerization
+- [Codex] API Authentication layer
