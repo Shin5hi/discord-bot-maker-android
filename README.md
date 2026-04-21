@@ -80,7 +80,7 @@ discord-bot-maker-android/
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/discord-bot-maker-android.git
+git clone https://github.com/BMA/discord-bot-maker-android.git
 cd discord-bot-maker-android/backend
 
 # Create virtual environment
