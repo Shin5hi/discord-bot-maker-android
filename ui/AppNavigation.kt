@@ -27,10 +27,7 @@ fun AppNavGraph(
     consoleViewModel: LiveConsoleViewModel = LiveConsoleViewModel(),
     botStatus: BotStatus = BotStatus()
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = AppRoutes.DASHBOARD
-    ) {
+    NavHost(navController = navController, startDestination = AppRoutes.DASHBOARD) {
         composable(AppRoutes.DASHBOARD) {
             MainDashboardScreen(
                 botStatus = botStatus,
