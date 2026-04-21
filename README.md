@@ -41,6 +41,8 @@ We believe bot development should be **accessible, mobile-first, and visually sa
 - **⚡ Instant Deploy** — Push bot configuration changes from your phone and see them take effect in seconds.
 - **🔌 WebSocket Streaming** — Low-latency, bidirectional communication between the Android client and the FastAPI backend via Redis Pub/Sub.
 - **🎨 Dark Neon UI** — A carefully crafted dark theme with neon green, cyan, and magenta accents across every screen.
+- **🎵 Music Player** — Stream music to Discord voice channels with a neon-styled player featuring play/pause/skip controls, a live progress bar, queue management, and track search.
+- **⚡ Custom Command Builder** — Create and manage custom bot commands visually with a neon-styled editor. Supports Text, Embed, and Random Meme response types with cloud sync.
 
 ---
 
@@ -52,9 +54,11 @@ discord-bot-maker-android/
 ├── app/
 │   └── src/main/kotlin/
 │       ├── LiveConsoleScreen.kt # Real-time log terminal UI
-│       └── AutoModScreen.kt    # AI moderation config screen
+│       ├── AutoModScreen.kt    # AI moderation config screen
+│       └── MusicPlayerScreen.kt # Music player with queue management
+│       └── CommandBuilderScreen.kt # Custom command builder UI
 ├── backend/
-│   └── backend_api.py          # FastAPI WebSocket + Redis integration
+│   └── backend_api.py          # FastAPI WebSocket + Redis + Music + Commands API
 ├── gradle/
 ├── build.gradle.kts
 └── settings.gradle.kts
@@ -76,7 +80,7 @@ discord-bot-maker-android/
 
 ```bash
 # Clone the repo
-git clone https://github.com/Shin5hi/discord-bot-maker-android.git
+git clone https://github.com/your-org/discord-bot-maker-android.git
 cd discord-bot-maker-android/backend
 
 # Create virtual environment
