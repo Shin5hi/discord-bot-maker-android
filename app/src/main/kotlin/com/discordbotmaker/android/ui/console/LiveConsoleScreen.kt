@@ -26,32 +26,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-// ─── Hacker Vibe Color Palette ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-object HackerColors {
-    val Background       = Color(0xFF0A0A0F)
-    val SurfaceDark      = Color(0xFF0D0D14)
-    val SurfaceCard      = Color(0xFF12121C)
-    val NeonGreen        = Color(0xFF00FF41)
-    val NeonCyan         = Color(0xFF00E5FF)
-    val NeonMagenta      = Color(0xFFFF00FF)
-    val NeonAmber        = Color(0xFFFFD600)
-    val NeonRed          = Color(0xFFFF1744)
-    val DimGreen         = Color(0xFF1B5E20)
-    val TextPrimary      = Color(0xFFE0E0E0)
-    val TextSecondary    = Color(0xFF9E9E9E)
-    val GlowGreen        = Color(0x3300FF41)
-    val ScanlineOverlay  = Color(0x08FFFFFF)
-}
+import com.discordbotmaker.android.ui.theme.NeonColors
 
 // ─── Log Entry Model ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 enum class LogLevel(val label: String, val color: Color, val prefix: String) {
-    INFO("INFO", HackerColors.NeonGreen, "▸"),
-    WARN("WARN", HackerColors.NeonAmber, "⚠"),
-    ERROR("ERROR", HackerColors.NeonRed, "✖"),
-    DEBUG("DEBUG", HackerColors.NeonCyan, "⊙"),
-    SYSTEM("SYS", HackerColors.NeonMagenta, "◆")
+    INFO("INFO", NeonColors.NeonGreen, "▸"),
+    WARN("WARN", NeonColors.NeonAmber, "⚠"),
+    ERROR("ERROR", NeonColors.NeonRed, "✖"),
+    DEBUG("DEBUG", NeonColors.NeonCyan, "⊙"),
+    SYSTEM("SYS", NeonColors.NeonMagenta, "◆")
 }
 
 data class LogEntry(
@@ -129,7 +113,7 @@ fun LiveConsoleScreen(viewModel: LiveConsoleViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(HackerColors.Background)
+            .background(NeonColors.Background)
     ) {
         // ── Header Bar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         ConsoleHeader(
@@ -149,8 +133,8 @@ fun LiveConsoleScreen(viewModel: LiveConsoleViewModel) {
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            HackerColors.SurfaceDark,
-                            HackerColors.Background
+                            NeonColors.SurfaceDark,
+                            NeonColors.Background
                         )
                     )
                 )
@@ -178,7 +162,7 @@ fun LiveConsoleScreen(viewModel: LiveConsoleViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(HackerColors.ScanlineOverlay)
+                    .background(NeonColors.ScanlineOverlay)
             )
         }
     }
@@ -195,13 +179,13 @@ private fun ConsoleHeader(
     onClearLogs: () -> Unit
 ) {
     val statusColor by animateColorAsState(
-        targetValue = if (isConnected) HackerColors.NeonGreen else HackerColors.NeonRed,
+        targetValue = if (isConnected) NeonColors.NeonGreen else NeonColors.NeonRed,
         animationSpec = tween(durationMillis = 500),
         label = "statusColor"
     )
 
     Surface(
-        color = HackerColors.SurfaceCard,
+        color = NeonColors.SurfaceCard,
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -216,14 +200,14 @@ private fun ConsoleHeader(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "▌",
-                    color = HackerColors.NeonGreen,
+                    color = NeonColors.NeonGreen,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = "LIVE CONSOLE",
-                    color = HackerColors.NeonGreen,
+                    color = NeonColors.NeonGreen,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
@@ -252,7 +236,7 @@ private fun ConsoleHeader(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "$logCount",
-                    color = HackerColors.TextSecondary,
+                    color = NeonColors.TextSecondary,
                     fontSize = 11.sp,
                     fontFamily = FontFamily.Monospace
                 )
@@ -262,7 +246,7 @@ private fun ConsoleHeader(
                 IconButton(onClick = onToggleAutoScroll, modifier = Modifier.size(32.dp)) {
                     Text(
                         text = if (autoScroll) "⇒" else "⇑",
-                        color = if (autoScroll) HackerColors.NeonCyan else HackerColors.TextSecondary,
+                        color = if (autoScroll) NeonColors.NeonCyan else NeonColors.TextSecondary,
                         fontSize = 16.sp
                     )
                 }
@@ -271,7 +255,7 @@ private fun ConsoleHeader(
                 IconButton(onClick = onClearLogs, modifier = Modifier.size(32.dp)) {
                     Text(
                         text = "⌫",
-                        color = HackerColors.NeonRed,
+                        color = NeonColors.NeonRed,
                         fontSize = 16.sp
                     )
                 }
@@ -286,7 +270,7 @@ private fun ConsoleHeader(
 private fun LogEntryRow(entry: LogEntry) {
     val annotated = buildAnnotatedString {
         // Timestamp
-        withStyle(SpanStyle(color = HackerColors.TextSecondary, fontSize = 11.sp)) {
+        withStyle(SpanStyle(color = NeonColors.TextSecondary, fontSize = 11.sp)) {
             append(entry.timestamp)
         }
         append(" ")
@@ -304,13 +288,13 @@ private fun LogEntryRow(entry: LogEntry) {
         append(" ")
 
         // Source tag
-        withStyle(SpanStyle(color = HackerColors.NeonCyan, fontSize = 11.sp)) {
+        withStyle(SpanStyle(color = NeonColors.NeonCyan, fontSize = 11.sp)) {
             append("[${entry.source}]")
         }
         append(" ")
 
         // Message body
-        withStyle(SpanStyle(color = HackerColors.TextPrimary, fontSize = 12.sp)) {
+        withStyle(SpanStyle(color = NeonColors.TextPrimary, fontSize = 12.sp)) {
             append(entry.message)
         }
     }
@@ -335,20 +319,20 @@ private fun EmptyConsoleState() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = "◉",
-                color = HackerColors.DimGreen,
+                color = NeonColors.DimGreen,
                 fontSize = 48.sp
             )
             Spacer(Modifier.height(12.dp))
             Text(
                 text = "Waiting for log stream…",
-                color = HackerColors.TextSecondary,
+                color = NeonColors.TextSecondary,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace
             )
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "Connect to your bot's backend to begin.",
-                color = HackerColors.TextSecondary.copy(alpha = 0.6f),
+                color = NeonColors.TextSecondary.copy(alpha = 0.6f),
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )

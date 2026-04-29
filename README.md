@@ -65,6 +65,45 @@ discord-bot-maker-android/
 
 See COORDINATION.md for art direction and development conventions.
 
+### Prerequisites
+
+- Android Studio Hedgehog (2024.1) or later
+- Python 3.11+
+- Redis 7.x running locally or via Docker
+- A Discord Bot Token ([Discord Developer Portal](https://discord.com/developers/applications))
+- Google Gemini API Key (for AI moderation)
+
+### Backend Setup
+
+```bash
+# Clone the repo
+git clone https://github.com/BMA/discord-bot-maker-android.git
+cd discord-bot-maker-android/backend
+
+# Create virtual environment
+python -m venv .venv && source .venv/bin/activate
+
+# Install dependencies
+pip install fastapi uvicorn redis aioredis websockets pydantic
+
+# Start Redis (Docker)
+docker run -d --name redis-dbm -p 6379:6379 redis:7.4-alpine
+
+# Run the backend
+uvicorn backend_api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Android App
+
+1. Open the project root in Android Studio.
+2. Sync Gradle and let dependencies resolve.
+3. Update `local.properties` with your backend URL:
+   ```properties
+   BACKEND_WS_URL=ws://YOUR_SERVER_IP:8000/ws/logs
+   BACKEND_API_URL=http://YOUR_SERVER_IP:8000
+   ```
+4. Build and run on your device or emulator.
+
 ---
 
 ## License

@@ -65,7 +65,7 @@ class LogEntry(BaseModel):
 
 
 class ToxicityAction(str, Enum):
-    WARN = "WARN"; DELETE = "DELETE"; MUTE = "MUTE"; BAM = "BAN"
+    WARN = "WARN"; DELETE = "DELETE"; MUTE = "MUTE"; BAN = "BAN"
 
 
 class AutoModConfig(BaseModel):

@@ -22,23 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-// ─── Dark / Neon Color Palette (shared with LiveConsoleScreen) ━━━━━━━━━━━━━━━
-
-private object NeonTheme {
-    val Background       = Color(0xFF0A0A0F)
-    val SurfaceCard      = Color(0xFF12121C)
-    val SurfaceBorder    = Color(0xFF1E1E2E)
-    val NeonGreen        = Color(0xFF00FF41)
-    val NeonCyan         = Color(0xFF00E5FF)
-    val NeonMagenta      = Color(0xFFFF00FF)
-    val NeonAmber        = Color(0xFFFFD600)
-    val NeonRed          = Color(0xFFFF1744)
-    val TextPrimary      = Color(0xFFE0E0E0)
-    val TextSecondary    = Color(0xFF9E9E9E)
-    val TextDim          = Color(0xFF616161)
-    val SwitchTrackOff   = Color(0xFF2A2A3A)
-    val SliderInactive   = Color(0xFF1A1A2A)
-}
+import com.discordbotmaker.android.ui.theme.NeonColors
 
 // ─── AutoMod Configuration State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -79,7 +63,7 @@ fun AutoModScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeonTheme.Background)
+            .background(NeonColors.Background)
             .verticalScroll(rememberScrollState())
     ) {
         // ── Header ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -92,7 +76,7 @@ fun AutoModScreen(
             title = "AI Toxicity Filter",
             subtitle = "Powered by Google Gemini",
             icon = "🧠",
-            accentColor = NeonTheme.NeonMagenta,
+            accentColor = NeonColors.NeonMagenta,
             enabled = state.toxicityFilterEnabled,
             onToggle = { update { copy(toxicityFilterEnabled = it) } }
         ) {
@@ -107,7 +91,7 @@ fun AutoModScreen(
                         label = "Sensitivity",
                         value = state.toxicitySensitivity,
                         valueLabel = "${(state.toxicitySensitivity * 100).roundToInt()}%",
-                        accentColor = NeonTheme.NeonMagenta,
+                        accentColor = NeonColors.NeonMagenta,
                         onValueChange = { update { copy(toxicitySensitivity = it) } }
                     )
 
@@ -116,7 +100,7 @@ fun AutoModScreen(
                     // Action selector
                     Text(
                         text = "ACTION ON VIOLATION",
-                        color = NeonTheme.TextSecondary,
+                        color = NeonColors.TextSecondary,
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace,
                         letterSpacing = 1.sp
@@ -130,7 +114,7 @@ fun AutoModScreen(
                             ActionChip(
                                 action = action,
                                 selected = state.toxicityAction == action,
-                                accentColor = NeonTheme.NeonMagenta,
+                                accentColor = NeonColors.NeonMagenta,
                                 onClick = { update { copy(toxicityAction = action) } }
                             )
                         }
@@ -146,7 +130,7 @@ fun AutoModScreen(
             title = "Link Blocking",
             subtitle = "Block unauthorized URLs in messages",
             icon = "🔗",
-            accentColor = NeonTheme.NeonAmber,
+            accentColor = NeonColors.NeonAmber,
             enabled = state.linkBlockingEnabled,
             onToggle = { update { copy(linkBlockingEnabled = it) } }
         ) {
@@ -159,13 +143,13 @@ fun AutoModScreen(
                     NeonSwitchRow(
                         label = "Allow whitelisted domains",
                         checked = state.allowWhitelistedLinks,
-                        accentColor = NeonTheme.NeonAmber,
+                        accentColor = NeonColors.NeonAmber,
                         onCheckedChange = { update { copy(allowWhitelistedLinks = it) } }
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = "Whitelisted: discord.com, youtube.com, github.com",
-                        color = NeonTheme.TextDim,
+                        color = NeonColors.TextDim,
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     )
@@ -180,7 +164,7 @@ fun AutoModScreen(
             title = "Spam Protection",
             subtitle = "Rate limiting & auto-mute for spam",
             icon = "🛡️",
-            accentColor = NeonTheme.NeonCyan,
+            accentColor = NeonColors.NeonCyan,
             enabled = state.spamProtectionEnabled,
             onToggle = { update { copy(spamProtectionEnabled = it) } }
         ) {
@@ -195,7 +179,7 @@ fun AutoModScreen(
                         label = "Message Threshold",
                         value = state.spamMessageThreshold.toFloat() / 20f,
                         valueLabel = "${state.spamMessageThreshold} msgs",
-                        accentColor = NeonTheme.NeonCyan,
+                        accentColor = NeonColors.NeonCyan,
                         onValueChange = {
                             update { copy(spamMessageThreshold = (it * 20).roundToInt().coerceIn(2, 20)) }
                         }
@@ -208,7 +192,7 @@ fun AutoModScreen(
                         label = "Time Window",
                         value = state.spamWindowSeconds.toFloat() / 60f,
                         valueLabel = "${state.spamWindowSeconds}s",
-                        accentColor = NeonTheme.NeonCyan,
+                        accentColor = NeonColors.NeonCyan,
                         onValueChange = {
                             update { copy(spamWindowSeconds = (it * 60).roundToInt().coerceIn(5, 60)) }
                         }
@@ -221,7 +205,7 @@ fun AutoModScreen(
                         label = "Mute Duration",
                         value = state.spamMuteDurationMinutes.toFloat() / 60f,
                         valueLabel = "${state.spamMuteDurationMinutes} min",
-                        accentColor = NeonTheme.NeonCyan,
+                        accentColor = NeonColors.NeonCyan,
                         onValueChange = {
                             update { copy(spamMuteDurationMinutes = (it * 60).roundToInt().coerceIn(1, 60)) }
                         }
@@ -241,8 +225,8 @@ fun AutoModScreen(
                 .height(52.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = NeonTheme.NeonGreen.copy(alpha = 0.15f),
-                contentColor = NeonTheme.NeonGreen
+                containerColor = NeonColors.NeonGreen.copy(alpha = 0.15f),
+                contentColor = NeonColors.NeonGreen
             )
         ) {
             Text(
@@ -263,14 +247,14 @@ fun AutoModScreen(
 @Composable
 private fun ScreenHeader() {
     Surface(
-        color = NeonTheme.SurfaceCard,
+        color = NeonColors.SurfaceCard,
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
             Text(
                 text = "▌ AUTOMOD",
-                color = NeonTheme.NeonGreen,
+                color = NeonColors.NeonGreen,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
@@ -279,7 +263,7 @@ private fun ScreenHeader() {
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "Configure AI-powered moderation rules for your server.",
-                color = NeonTheme.TextSecondary,
+                color = NeonColors.TextSecondary,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -306,7 +290,7 @@ private fun ModCard(
             .clip(RoundedCornerShape(12.dp))
             .border(
                 width = 1.dp,
-                color = if (enabled) accentColor.copy(alpha = 0.4f) else NeonTheme.SurfaceBorder,
+                color = if (enabled) accentColor.copy(alpha = 0.4f) else NeonColors.SurfaceBorder,
                 shape = RoundedCornerShape(12.dp)
             )
             .background(
@@ -314,12 +298,12 @@ private fun ModCard(
                     Brush.verticalGradient(
                         colors = listOf(
                             accentColor.copy(alpha = 0.05f),
-                            NeonTheme.SurfaceCard
+                            NeonColors.SurfaceCard
                         )
                     )
                 } else {
                     Brush.verticalGradient(
-                        colors = listOf(NeonTheme.SurfaceCard, NeonTheme.SurfaceCard)
+                        colors = listOf(NeonColors.SurfaceCard, NeonColors.SurfaceCard)
                     )
                 }
             )
@@ -336,14 +320,14 @@ private fun ModCard(
                     Column {
                         Text(
                             text = title,
-                            color = if (enabled) accentColor else NeonTheme.TextPrimary,
+                            color = if (enabled) accentColor else NeonColors.TextPrimary,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.Monospace
                         )
                         Text(
                             text = subtitle,
-                            color = NeonTheme.TextDim,
+                            color = NeonColors.TextDim,
                             fontSize = 11.sp,
                             fontFamily = FontFamily.Monospace
                         )
@@ -356,8 +340,8 @@ private fun ModCard(
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = accentColor,
                         checkedTrackColor = accentColor.copy(alpha = 0.3f),
-                        uncheckedThumbColor = NeonTheme.TextSecondary,
-                        uncheckedTrackColor = NeonTheme.SwitchTrackOff
+                        uncheckedThumbColor = NeonColors.TextSecondary,
+                        uncheckedTrackColor = NeonColors.SwitchTrackOff
                     )
                 )
             }
@@ -384,7 +368,7 @@ private fun LabeledSlider(
         ) {
             Text(
                 text = label.uppercase(),
-                color = NeonTheme.TextSecondary,
+                color = NeonColors.TextSecondary,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
                 letterSpacing = 1.sp
@@ -405,7 +389,7 @@ private fun LabeledSlider(
             colors = SliderDefaults.colors(
                 thumbColor = accentColor,
                 activeTrackColor = accentColor,
-                inactiveTrackColor = NeonTheme.SliderInactive
+                inactiveTrackColor = NeonColors.SliderInactive
             )
         )
     }
@@ -427,7 +411,7 @@ private fun NeonSwitchRow(
     ) {
         Text(
             text = label,
-            color = NeonTheme.TextPrimary,
+            color = NeonColors.TextPrimary,
             fontSize = 13.sp,
             fontFamily = FontFamily.Monospace
         )
@@ -437,8 +421,8 @@ private fun NeonSwitchRow(
             colors = SwitchDefaults.colors(
                 checkedThumbColor = accentColor,
                 checkedTrackColor = accentColor.copy(alpha = 0.3f),
-                uncheckedThumbColor = NeonTheme.TextSecondary,
-                uncheckedTrackColor = NeonTheme.SwitchTrackOff
+                uncheckedThumbColor = NeonColors.TextSecondary,
+                uncheckedTrackColor = NeonColors.SwitchTrackOff
             )
         )
     }
@@ -459,12 +443,12 @@ private fun RowScope.ActionChip(
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = if (selected) accentColor.copy(alpha = 0.15f) else Color.Transparent,
-            contentColor = if (selected) accentColor else NeonTheme.TextSecondary
+            contentColor = if (selected) accentColor else NeonColors.TextSecondary
         ),
         border = ButtonDefaults.outlinedButtonBorder.copy(
             brush = Brush.linearGradient(
                 colors = if (selected) listOf(accentColor, accentColor)
-                else listOf(NeonTheme.SurfaceBorder, NeonTheme.SurfaceBorder)
+                else listOf(NeonColors.SurfaceBorder, NeonColors.SurfaceBorder)
             )
         ),
         contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
