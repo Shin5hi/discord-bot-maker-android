@@ -85,7 +85,7 @@ fun isTokenFormatValid(token: String): Boolean =
 
 @Composable
 fun BotCreationScreen(
-    onDeploy: (token: String, botName: String, onComplete: (success: Boolean) -> Unit) -> Unit = { _, _, cb -> cb(true) }
+    onDeploy: (token: String, botName: String, onComplete: (success: Boolean) -> Unit) -> Unit = { _, _, cb -> cb(false) }
 ) {
     var token by remember { mutableStateOf("") }
     var botName by remember { mutableStateOf("") }
