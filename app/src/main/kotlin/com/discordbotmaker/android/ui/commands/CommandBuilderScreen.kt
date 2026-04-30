@@ -39,27 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-// ─── Dark / Neon Color Palette (consistent with project-wide NeonTheme) ━━━━━━
-
-private object NeonTheme {
-    val Background       = Color(0xFF0A0A0F)
-    val SurfaceCard      = Color(0xFF12121C)
-    val SurfaceBorder    = Color(0xFF1E1E2E)
-    val NeonGreen        = Color(0xFF00FF41)
-    val NeonCyan         = Color(0xFF00E5FF)
-    val NeonMagenta      = Color(0xFFFF00FF)
-    val NeonAmber        = Color(0xFFFFD600)
-    val NeonRed          = Color(0xFFFF1744)
-    val NeonPurple       = Color(0xFFBB86FC)
-    val TextPrimary      = Color(0xFFE0E0E0)
-    val TextSecondary    = Color(0xFF9E9E9E)
-    val TextDim          = Color(0xFF616161)
-    val InputBackground  = Color(0xFF0D0D14)
-    val SwitchTrackOff   = Color(0xFF2A2A3A)
-}
-
-// ─── Data Models ━━━━━━━━━━
+import com.discordbotmaker.android.ui.theme.NeonColors
 
 enum class ResponseType(val label: String, val icon: String, val accent: Color) {
     TEXT("Text", "💬", Color(0xFF00E5FF)),
@@ -93,7 +73,7 @@ fun CommandBuilderScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeonTheme.Background)
+            .background(NeonColors.Background)
             .verticalScroll(rememberScrollState())
     ) {
         // ── Header ━━━━━━━━━━
@@ -174,14 +154,14 @@ fun CommandBuilderScreen(
 @Composable
 private fun CommandBuilderHeader() {
     Surface(
-        color = NeonTheme.SurfaceCard,
+        color = NeonColors.SurfaceCard,
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
             Text(
                 text = "▌ COMMAND BUILDER",
-                color = NeonTheme.NeonPurple,
+                color = NeonColors.NeonPurple,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
@@ -190,7 +170,7 @@ private fun CommandBuilderHeader() {
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "Create and manage custom bot commands visually.",
-                color = NeonTheme.TextSecondary,
+                color = NeonColors.TextSecondary,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -207,8 +187,8 @@ private fun CommandStatsBar(commandCount: Int) {
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .clip(RoundedCornerShape(10.dp))
-            .border(1.dp, NeonTheme.SurfaceBorder, RoundedCornerShape(10.dp))
-            .background(NeonTheme.SurfaceCard)
+            .border(1.dp, NeonColors.SurfaceBorder, RoundedCornerShape(10.dp))
+            .background(NeonColors.SurfaceCard)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -218,7 +198,7 @@ private fun CommandStatsBar(commandCount: Int) {
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "REGISTERED COMMANDS",
-                color = NeonTheme.TextSecondary,
+                color = NeonColors.TextSecondary,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -227,7 +207,7 @@ private fun CommandStatsBar(commandCount: Int) {
         }
         Text(
             text = "$commandCount",
-            color = NeonTheme.NeonCyan,
+            color = NeonColors.NeonCyan,
             fontSize = 18.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
@@ -246,7 +226,7 @@ private fun CommandListSection(
     Column(modifier = Modifier.padding(horizontal = 12.dp)) {
         Text(
             text = "COMMANDS",
-            color = NeonTheme.TextSecondary,
+            color = NeonColors.TextSecondary,
             fontSize = 10.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -261,8 +241,8 @@ private fun CommandListSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .border(1.dp, NeonTheme.SurfaceBorder, RoundedCornerShape(10.dp))
-                    .background(NeonTheme.SurfaceCard)
+                    .border(1.dp, NeonColors.SurfaceBorder, RoundedCornerShape(10.dp))
+                    .background(NeonColors.SurfaceCard)
                     .padding(vertical = 40.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -271,7 +251,7 @@ private fun CommandListSection(
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = "No commands yet",
-                        color = NeonTheme.TextDim,
+                        color = NeonColors.TextDim,
                         fontSize = 13.sp,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Medium
@@ -279,7 +259,7 @@ private fun CommandListSection(
                     Spacer(Modifier.height(2.dp))
                     Text(
                         text = "Tap '+ Add Command' below to create one",
-                        color = NeonTheme.TextDim.copy(alpha = 0.7f),
+                        color = NeonColors.TextDim.copy(alpha = 0.7f),
                         fontSize = 11.sp,
                         fontFamily = FontFamily.Monospace
                     )
@@ -290,8 +270,8 @@ private fun CommandListSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .border(1.dp, NeonTheme.SurfaceBorder, RoundedCornerShape(10.dp))
-                    .background(NeonTheme.SurfaceCard)
+                    .border(1.dp, NeonColors.SurfaceBorder, RoundedCornerShape(10.dp))
+                    .background(NeonColors.SurfaceCard)
             ) {
                 commands.forEachIndexed { index, command ->
                     CommandRow(
@@ -301,7 +281,7 @@ private fun CommandListSection(
                     )
                     if (index < commands.lastIndex) {
                         HorizontalDivider(
-                            color = NeonTheme.SurfaceBorder,
+                            color = NeonColors.SurfaceBorder,
                             thickness = 0.5.dp,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
@@ -355,7 +335,7 @@ private fun CommandRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = "/${command.name}",
-                color = NeonTheme.TextPrimary,
+                color = NeonColors.TextPrimary,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -380,7 +360,7 @@ private fun CommandRow(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = "• ${command.responseContent.take(30)}${if (command.responseContent.length > 30) "…" else ""}",
-                    color = NeonTheme.TextDim,
+                    color = NeonColors.TextDim,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     maxLines = 1,
@@ -395,12 +375,12 @@ private fun CommandRow(
                 .size(32.dp)
                 .clip(RoundedCornerShape(6.dp))
                 .clickable(onClick = onEdit)
-                .background(NeonTheme.NeonCyan.copy(alpha = 0.08f)),
+                .background(NeonColors.NeonCyan.copy(alpha = 0.08f)),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "✎",
-                color = NeonTheme.NeonCyan,
+                color = NeonColors.NeonCyan,
                 fontSize = 14.sp
             )
         }
@@ -413,12 +393,12 @@ private fun CommandRow(
                 .size(32.dp)
                 .clip(RoundedCornerShape(6.dp))
                 .clickable(onClick = onDelete)
-                .background(NeonTheme.NeonRed.copy(alpha = 0.08f)),
+                .background(NeonColors.NeonRed.copy(alpha = 0.08f)),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "✕",
-                color = NeonTheme.NeonRed,
+                color = NeonColors.NeonRed,
                 fontSize = 14.sp
             )
         }
@@ -437,8 +417,8 @@ private fun AddCommandButton(onClick: () -> Unit) {
             .height(50.dp),
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = NeonTheme.NeonPurple.copy(alpha = 0.15f),
-            contentColor = NeonTheme.NeonPurple
+            containerColor = NeonColors.NeonPurple.copy(alpha = 0.15f),
+            contentColor = NeonColors.NeonPurple
         )
     ) {
         Text(
@@ -471,8 +451,8 @@ private fun GlowingSaveToCloudButton(
         label = "saveGlowAlpha"
     )
 
-    val neonGreen = NeonTheme.NeonGreen
-    val neonCyan = NeonTheme.NeonCyan
+    val neonGreen = NeonColors.NeonGreen
+    val neonCyan = NeonColors.NeonCyan
     val effectiveAlpha = if (enabled) glowAlpha else 0.15f
 
     Column(
@@ -482,13 +462,13 @@ private fun GlowingSaveToCloudButton(
         if (isSaving) {
             CircularProgressIndicator(
                 modifier = Modifier.size(28.dp),
-                color = NeonTheme.NeonGreen,
+                color = NeonColors.NeonGreen,
                 strokeWidth = 2.dp
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = "Syncing to cloud…",
-                color = NeonTheme.NeonGreen,
+                color = NeonColors.NeonGreen,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -536,7 +516,7 @@ private fun GlowingSaveToCloudButton(
             ) {
                 Text(
                     text = "☁  SAVE TO CLOUD",
-                    color = if (enabled) NeonTheme.NeonGreen else NeonTheme.TextDim,
+                    color = if (enabled) NeonColors.NeonGreen else NeonColors.TextDim,
                     fontSize = 16.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -592,12 +572,12 @@ private fun CommandEditorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = NeonTheme.SurfaceCard,
+        containerColor = NeonColors.SurfaceCard,
         shape = RoundedCornerShape(16.dp),
         title = {
             Text(
                 text = if (isEditing) "✎ EDIT COMMAND" else "⊕ NEW COMMAND",
-                color = NeonTheme.NeonPurple,
+                color = NeonColors.NeonPurple,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -609,7 +589,7 @@ private fun CommandEditorDialog(
                 // ── Command Name Field ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 Text(
                     text = "COMMAND NAME",
-                    color = NeonTheme.TextSecondary,
+                    color = NeonColors.TextSecondary,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -625,16 +605,16 @@ private fun CommandEditorDialog(
                         .clip(RoundedCornerShape(8.dp))
                         .border(
                             width = 1.dp,
-                            color = if (nameError != null) NeonTheme.NeonRed.copy(alpha = 0.6f)
-                            else NeonTheme.SurfaceBorder,
+                            color = if (nameError != null) NeonColors.NeonRed.copy(alpha = 0.6f)
+                            else NeonColors.SurfaceBorder,
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .background(NeonTheme.InputBackground),
+                        .background(NeonColors.InputBackground),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "/",
-                        color = NeonTheme.NeonPurple,
+                        color = NeonColors.NeonPurple,
                         fontSize = 16.sp,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -654,18 +634,18 @@ private fun CommandEditorDialog(
                             .weight(1f)
                             .padding(end = 12.dp),
                         textStyle = TextStyle(
-                            color = if (isEditing) NeonTheme.TextDim else NeonTheme.TextPrimary,
+                            color = if (isEditing) NeonColors.TextDim else NeonColors.TextPrimary,
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Monospace
                         ),
                         singleLine = true,
-                        cursorBrush = SolidColor(NeonTheme.NeonPurple),
+                        cursorBrush = SolidColor(NeonColors.NeonPurple),
                         decorationBox = { innerTextField ->
                             Box {
                                 if (commandName.isEmpty()) {
                                     Text(
                                         text = "e.g. ping, hello, meme",
-                                        color = NeonTheme.TextDim,
+                                        color = NeonColors.TextDim,
                                         fontSize = 14.sp,
                                         fontFamily = FontFamily.Monospace
                                     )
@@ -680,7 +660,7 @@ private fun CommandEditorDialog(
                 AnimatedVisibility(visible = nameError != null) {
                     Text(
                         text = nameError ?: "",
-                        color = NeonTheme.NeonRed,
+                        color = NeonColors.NeonRed,
                         fontSize = 10.sp,
                         fontFamily = FontFamily.Monospace,
                         modifier = Modifier.padding(top = 4.dp)
@@ -692,7 +672,7 @@ private fun CommandEditorDialog(
                 // ── Response Type Selector ━━━━━━━━━━━━━━━━━━━━━━
                 Text(
                     text = "RESPONSE TYPE",
-                    color = NeonTheme.TextSecondary,
+                    color = NeonColors.TextSecondary,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -720,7 +700,7 @@ private fun CommandEditorDialog(
                 // ── Response Content Field ━━━━━━━━━━━━━━━━━━━━━━
                 Text(
                     text = "RESPONSE CONTENT",
-                    color = NeonTheme.TextSecondary,
+                    color = NeonColors.TextSecondary,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -740,8 +720,8 @@ private fun CommandEditorDialog(
                         .fillMaxWidth()
                         .heightIn(min = 80.dp, max = 140.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .border(1.dp, NeonTheme.SurfaceBorder, RoundedCornerShape(8.dp))
-                        .background(NeonTheme.InputBackground)
+                        .border(1.dp, NeonColors.SurfaceBorder, RoundedCornerShape(8.dp))
+                        .background(NeonColors.InputBackground)
                         .padding(12.dp)
                 ) {
                     BasicTextField(
@@ -749,17 +729,17 @@ private fun CommandEditorDialog(
                         onValueChange = { responseContent = it.take(500) },
                         modifier = Modifier.fillMaxWidth(),
                         textStyle = TextStyle(
-                            color = NeonTheme.TextPrimary,
+                            color = NeonColors.TextPrimary,
                             fontSize = 13.sp,
                             fontFamily = FontFamily.Monospace
                         ),
-                        cursorBrush = SolidColor(NeonTheme.NeonPurple),
+                        cursorBrush = SolidColor(NeonColors.NeonPurple),
                         decorationBox = { innerTextField ->
                             Box {
                                 if (responseContent.isEmpty()) {
                                     Text(
                                         text = contentHint,
-                                        color = NeonTheme.TextDim,
+                                        color = NeonColors.TextDim,
                                         fontSize = 13.sp,
                                         fontFamily = FontFamily.Monospace
                                     )
@@ -774,7 +754,7 @@ private fun CommandEditorDialog(
 
                 Text(
                     text = "${responseContent.length}/500",
-                    color = NeonTheme.TextDim,
+                    color = NeonColors.TextDim,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     modifier = Modifier.align(Alignment.End)
@@ -796,8 +776,8 @@ private fun CommandEditorDialog(
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = NeonTheme.NeonGreen.copy(alpha = 0.2f),
-                    contentColor = NeonTheme.NeonGreen
+                    containerColor = NeonColors.NeonGreen.copy(alpha = 0.2f),
+                    contentColor = NeonColors.NeonGreen
                 )
             ) {
                 Text(
@@ -814,7 +794,7 @@ private fun CommandEditorDialog(
                 onClick = onDismiss,
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = NeonTheme.TextSecondary
+                    contentColor = NeonColors.TextSecondary
                 )
             ) {
                 Text(
@@ -839,7 +819,7 @@ private fun ResponseTypeChip(
     modifier: Modifier = Modifier
 ) {
     val borderColor by animateColorAsState(
-        targetValue = if (selected) type.accent else NeonTheme.SurfaceBorder,
+        targetValue = if (selected) type.accent else NeonColors.SurfaceBorder,
         animationSpec = tween(durationMillis = 200),
         label = "chipBorder_${type.name}"
     )
@@ -861,7 +841,7 @@ private fun ResponseTypeChip(
             Spacer(Modifier.height(4.dp))
             Text(
                 text = type.label,
-                color = if (selected) type.accent else NeonTheme.TextSecondary,
+                color = if (selected) type.accent else NeonColors.TextSecondary,
                 fontSize = 10.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
