@@ -78,7 +78,7 @@ data class BotCommand(
 @Composable
 fun CommandBuilderScreen(
     initialCommands: List<BotCommand> = emptyList(),
-    onSaveToCloud: (List<BotCommand>) -> Unit = {},
+    onSaveToCloud: (List<BotCommand>, onComplete: () -> Unit) -> Unit = { _, cb -> cb() },
     onDeleteCommand: (BotCommand) -> Unit = {},
     onSaveCommand: (BotCommand) -> Unit = {}
 ) {
@@ -137,7 +137,7 @@ fun CommandBuilderScreen(
             isSaving = isSaving,
             onClick = {
                 isSaving = true
-                onSaveToCloud(commands)
+                onSaveToCloud(commands) { isSaving = false }
             }
         )
 

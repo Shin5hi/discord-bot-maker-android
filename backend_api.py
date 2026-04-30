@@ -19,7 +19,9 @@ import asyncio
 import json
 import logging
 import os
+import re
 import time
+import uuid
 from contextlib import asynccontextmanager
 from enum import Enum
 from typing import AsyncGenerator
@@ -65,7 +67,7 @@ class LogEntry(BaseModel):
 
 
 class ToxicityAction(str, Enum):
-    WARN = "WARN"; DELETE = "DELETE"; MUTE = "MUTE"; BAM = "BAN"
+    WARN = "WARN"; DELETE = "DELETE"; MUTE = "MUTE"; BAN = "BAN"
 
 
 class AutoModConfig(BaseModel):
@@ -90,7 +92,7 @@ async def websocket_log_stream(ws: WebSocket) -> None:
             message = await pubsub.get_message(ignore_subscribe_messages=True, timeout=1.0)
             if message and message["type"] == "message":
                 try: log_entry = LogEntry(**json.loads(message["data"]))
-                except: log_entry = LogEntry(level=LogLevel.INFO, source="raw", message=str(message["data"]))
+                except Exception: log_entry = LogEntry(level=LogLevel.INFO, source="raw", message=str(message["data"]))
                 await ws.send_json(log_entry.model_dump())
             try:
                 client_msg = await asyncio.wait_for(ws.receive_text(), timeout=0.05)
@@ -181,11 +183,11 @@ async def music_get_queue() -> MusicQueueResponse:
     raw_queue = await r.get(MUSIC_QUEUE_KEY); tracks = []
     if raw_queue:
         try: tracks = [MusicTrack(**i) for i in json.loads(raw_queue)]
-        except: tracks = []
+        except Exception: tracks = []
     raw_state = await r.get(MUSIC_STATE_KEY); now_playing = None
     if raw_state:
         try: now_playing = MusicTrack.model_validate_json(raw_state)
-        except: now_playing = None
+        except Exception: now_playing = None
     return MusicQueueResponse(queue=tracks, length=len(tracks), now_playing=now_playing)
 
 
@@ -196,7 +198,7 @@ async def music_add_track(request: MusicAddRequest) -> dict:
     raw_queue = await r.get(MUSIC_QUEUE_KEY); queue = []
     if raw_queue:
         try: queue = json.loads(raw_queue)
-        except: queue = []
+        except Exception: queue = []
     queue.append(track.model_dump()); await r.set(MUSIC_QUEUE_KEY, json.dumps(queue))
     await r.publish(MUSIC_CHANNEL, json.dumps({"event": "track_added", "track": track.model_dump(), "queue_length": len(queue)}))
     log_entry = LogEntry(level=LogLevel.INFO, source="music", message=f"Track added to queue \"{track.title}\" by {track.artist}")
@@ -221,7 +223,6 @@ class DeployResponse(BaseModel):
     region: str = "us-east-1"; estimated_time_seconds: int = 30
 
 
-import re, uuid
 DISCORD_TOKEN_RE = re.compile(r"^[A-Za-z0-9_-]{24,}\.[A-Za-z0-9_-]{4,9}\.[A-Za-z0-9_-]{25,}$")
 
 
@@ -263,7 +264,7 @@ async def list_commands() -> list[BotCommandResponse]:
     commands = []
     for name, data in raw.items():
         try: commands.append(BotCommandResponse(name=name, **json.loads(data)))
-        except: continue
+        except Exception: continue
     return commands
 
 

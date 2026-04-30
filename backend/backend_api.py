@@ -19,7 +19,9 @@ import asyncio
 import json
 import logging
 import os
+import re
 import time
+import uuid
 from contextlib import asynccontextmanager
 from enum import Enum
 from typing import AsyncGenerator
@@ -439,11 +441,9 @@ class DeployResponse(BaseModel):
     estimated_time_seconds: int = 30
 
 
-import re
-import uuid
 
 DISCORD_TOKEN_RE = re.compile(
-    r"^[A-Za-z0-9_-]{24,}\\.[A-Za-z0-9_-]{4,9}\\.[A-Za-z0-9_-]{25,}$"
+    r"^[A-Za-z0-9_-]{24,}\.[A-Za-z0-9_-]{4,9}\.[A-Za-z0-9_-]{25,}$"
 )
 
 

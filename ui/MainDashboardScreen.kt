@@ -117,7 +117,7 @@ private fun BotStatusCard(status: BotStatus) {
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Divider(color = NeonColors.SurfaceBorder, thickness = 1.dp)
+            HorizontalDivider(color = NeonColors.SurfaceBorder, thickness = 1.dp)
             Spacer(Modifier.height(12.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 StatItem(label = "SERVERS", value = "${status.serverCount}", color = NeonColors.NeonCyan)
