@@ -96,6 +96,12 @@ docker run -d --name redis-dbm -p 6379:6379 redis:7.4-alpine
 uvicorn backend_api:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+### Repo Notes (for contributors/agents)
+
+- This repository is currently a **lightweight scaffold**: it contains UI screens and a FastAPI module, but it does **not** include a full Android/Gradle project setup (for example, there's no `./gradlew` wrapper checked in yet).
+- There are **two copies** of the backend entrypoint: `backend/backend_api.py` and `backend_api.py`. They are currently identical; prefer `backend/backend_api.py` as the canonical backend module.
+- If you run `python -m unittest`, it should succeed without requiring third-party Python packages (the FastAPI backend itself still requires dependencies as listed above).
+
 ### Android App
 
 1. Open the project root in Android Studio.
