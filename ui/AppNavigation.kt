@@ -22,15 +22,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.discordbotmaker.android.ui.automod.AutoModScreen
 import com.discordbotmaker.android.ui.commands.CommandBuilderScreen
+import com.discordbotmaker.android.ui.components.OrionBubble
 import com.discordbotmaker.android.ui.console.LiveConsoleScreen
 import com.discordbotmaker.android.ui.console.LiveConsoleViewModel
 import com.discordbotmaker.android.ui.dashboard.BotStatus
 import com.discordbotmaker.android.ui.dashboard.GridBottomNavBar
 import com.discordbotmaker.android.ui.dashboard.MainDashboardScreen
-import com.discordbotmaker.android.ui.doubt.DoubtAssistantScreen
 import com.discordbotmaker.android.ui.launch.BotCreationScreen
 import com.discordbotmaker.android.ui.library.ToolLibraryScreen
 import com.discordbotmaker.android.ui.splash.SplashScreen
+import com.discordbotmaker.android.ui.doubt.DoubtAssistantScreen
 import com.discordbotmaker.android.ui.theme.AppColors
 
 object AppRoutes {
@@ -51,6 +52,12 @@ private val bottomNavRoutes = setOf(
     AppRoutes.SETTINGS
 )
 
+// Screens where the Orión FAB should NOT appear
+private val hideOrionRoutes = setOf(
+    AppRoutes.SPLASH,
+    AppRoutes.DOUBT_ASSISTANT
+)
+
 @Composable
 fun AppNavGraph(
     navController: NavHostController = rememberNavController(),
@@ -60,6 +67,7 @@ fun AppNavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: AppRoutes.SPLASH
     val showBottomNav = currentRoute in bottomNavRoutes
+    val showOrionBubble = currentRoute !in hideOrionRoutes
 
     Scaffold(
         bottomBar = {
@@ -80,84 +88,100 @@ fun AppNavGraph(
         },
         containerColor = AppColors.Background
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = AppRoutes.SPLASH,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(AppRoutes.SPLASH) {
-                SplashScreen(
-                    onSplashComplete = {
-                        navController.navigate(AppRoutes.DASHBOARD) {
-                            popUpTo(AppRoutes.SPLASH) { inclusive = true }
-                            launchSingleTop = true
-                        }
-                    }
-                )
-            }
-
-            composable(AppRoutes.DASHBOARD) {
-                MainDashboardScreen(
-                    botStatus = botStatus,
-                    onNavigateToConsole = {
-                        navController.navigate(AppRoutes.LIVE_CONSOLE) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onNavigateToAutoMod = {
-                        navController.navigate(AppRoutes.AUTO_MOD) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onNavigateToCommandBuilder = {
-                        navController.navigate(AppRoutes.COMMAND_BUILDER) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onNavigateToBotCreation = {
-                        navController.navigate(AppRoutes.BOT_CREATION) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onLoginWithDiscord = {}
-                )
-            }
-
-            composable(AppRoutes.TOOL_LIBRARY) {
-                ToolLibraryScreen(
-                    onToolSelected = { toolName ->
-                        when (toolName) {
-                            "Doubt Assistant" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NavHost(
+                navController = navController,
+                startDestination = AppRoutes.SPLASH,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                composable(AppRoutes.SPLASH) {
+                    SplashScreen(
+                        onSplashComplete = {
+                            navController.navigate(AppRoutes.DASHBOARD) {
+                                popUpTo(AppRoutes.SPLASH) { inclusive = true }
                                 launchSingleTop = true
                             }
-                            else -> { }
                         }
-                    }
+                    )
+                }
+
+                composable(AppRoutes.DASHBOARD) {
+                    MainDashboardScreen(
+                        botStatus = botStatus,
+                        onNavigateToConsole = {
+                            navController.navigate(AppRoutes.LIVE_CONSOLE) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onNavigateToAutoMod = {
+                            navController.navigate(AppRoutes.AUTO_MOD) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onNavigateToCommandBuilder = {
+                            navController.navigate(AppRoutes.COMMAND_BUILDER) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onNavigateToBotCreation = {
+                            navController.navigate(AppRoutes.BOT_CREATION) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onLoginWithDiscord = {}
+                    )
+                }
+
+                composable(AppRoutes.TOOL_LIBRARY) {
+                    ToolLibraryScreen(
+                        onToolSelected = { toolName ->
+                            when (toolName) {
+                                "Asistente Orión" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+                                    launchSingleTop = true
+                                }
+                                else -> { }
+                            }
+                        }
+                    )
+                }
+
+                composable(AppRoutes.SETTINGS) {
+                    SettingsPlaceholderScreen()
+                }
+
+                composable(AppRoutes.LIVE_CONSOLE) {
+                    LiveConsoleScreen(viewModel = consoleViewModel)
+                }
+
+                composable(AppRoutes.AUTO_MOD) {
+                    AutoModScreen()
+                }
+
+                composable(AppRoutes.COMMAND_BUILDER) {
+                    CommandBuilderScreen()
+                }
+
+                composable(AppRoutes.BOT_CREATION) {
+                    BotCreationScreen()
+                }
+
+                composable(AppRoutes.DOUBT_ASSISTANT) {
+                    DoubtAssistantScreen()
+                }
+            }
+
+            // Orión Floating Bubble — Global overlay
+            if (showOrionBubble) {
+                OrionBubble(
+                    onClick = {
+                        navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+                            launchSingleTop = true
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp)
                 )
-            }
-
-            composable(AppRoutes.SETTINGS) {
-                SettingsPlaceholderScreen()
-            }
-
-            composable(AppRoutes.LIVE_CONSOLE) {
-                LiveConsoleScreen(viewModel = consoleViewModel)
-            }
-
-            composable(AppRoutes.AUTO_MOD) {
-                AutoModScreen()
-            }
-
-            composable(AppRoutes.COMMAND_BUILDER) {
-                CommandBuilderScreen()
-            }
-
-            composable(AppRoutes.BOT_CREATION) {
-                BotCreationScreen()
-            }
-
-            composable(AppRoutes.DOUBT_ASSISTANT) {
-                DoubtAssistantScreen()
             }
         }
     }
@@ -172,7 +196,7 @@ private fun SettingsPlaceholderScreen() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "\u2699\uFE0F", fontSize = 48.sp)
+            Text(text = "⚙️", fontSize = 48.sp)
             Text(
                 text = "Settings",
                 color = AppColors.TextPrimary,
