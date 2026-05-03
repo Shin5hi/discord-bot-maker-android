@@ -13,6 +13,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 UI_FILES = [
     "ui/AppTheme.kt",
     "ui/SplashScreen.kt",
+    "ui/OriginLoadingScreen.kt",
     "ui/MainDashboardScreen.kt",
     "LiveConsoleScreen.kt",
     "AutoModScreen.kt",
@@ -113,7 +114,7 @@ class TestAppThemeGridBranding:
 # ─── SplashScreen.kt Tests ──────────────────────────────────────────────────
 
 class TestSplashScreen:
-    """Verify Grid splash screen structure."""
+    """Verify SplashScreen delegates to OriginLoadingScreen."""
 
     def setup_method(self):
         self.content = read_file("ui/SplashScreen.kt")
@@ -124,34 +125,14 @@ class TestSplashScreen:
     def test_splash_composable_function(self):
         assert "fun SplashScreen" in self.content, "SplashScreen composable missing"
 
-    def test_uses_app_colors(self):
-        assert "import com.discordbotmaker.android.ui.theme.AppColors" in self.content
-
-    def test_uses_blurple_background(self):
-        assert "AppColors.Primary" in self.content, "Blurple primary color not used in splash"
-
-    def test_has_pulsing_animation(self):
-        assert "pulseAlpha" in self.content or "pulse" in self.content.lower(), (
-            "Pulsing animation not found in SplashScreen"
-        )
-
-    def test_shows_grid_logo_text(self):
-        assert '"G"' in self.content, 'Grid "G" logo placeholder missing'
-
-    def test_shows_grid_name(self):
-        assert '"Grid"' in self.content, 'Grid name text missing from splash'
-
-    def test_uses_sans_serif(self):
-        assert "FontFamily.SansSerif" in self.content, "Splash must use SansSerif font"
-
-    def test_no_monospace(self):
-        assert "FontFamily.Monospace" not in self.content, "Splash must not use Monospace"
+    def test_delegates_to_origin_loading(self):
+        assert "OriginLoadingScreen" in self.content, "Should delegate to OriginLoadingScreen"
 
     def test_on_splash_complete_callback(self):
         assert "onSplashComplete" in self.content, "Splash completion callback missing"
 
-    def test_has_delay(self):
-        assert "delay" in self.content, "Splash should auto-navigate after a delay"
+    def test_passes_loading_complete(self):
+        assert "onLoadingComplete" in self.content, "Should pass callback to OriginLoadingScreen"
 
 
 # ─── MainDashboardScreen.kt Tests ────────────────────────────────────────────
@@ -162,8 +143,8 @@ class TestMainDashboardGridBranding:
     def setup_method(self):
         self.content = read_file("ui/MainDashboardScreen.kt")
 
-    def test_grid_bot_hub_title(self):
-        assert "Grid Bot Hub" in self.content, "Header should show 'Grid Bot Hub'"
+    def test_grid_bot_maker_title(self):
+        assert "Grid Bot Maker" in self.content or "Grid Bot Hub" in self.content, "Header should show Grid branding"
 
     def test_no_generic_dashboard_only_title(self):
         # Should not have a standalone "Dashboard" as the main header text
@@ -177,7 +158,7 @@ class TestMainDashboardGridBranding:
         assert '"G"' in self.content, 'Grid "G" brand mark missing from header'
 
     def test_version_string_branded(self):
-        assert "Grid Bot Hub v" in self.content, "Version string should include Grid Bot Hub"
+        assert "Grid Bot Maker v" in self.content or "Grid Bot Hub v" in self.content, "Version string should include Grid branding"
 
     def test_no_old_version_string(self):
         assert "discord-bot-maker v" not in self.content, "Old version string still present"
@@ -273,7 +254,7 @@ class TestAllScreensUseAppColors:
 class TestRoundedCorners:
     """Verify cards and buttons use 8.dp rounded corners (Discord style)."""
 
-    SCREEN_FILES = [f for f in UI_FILES if f != "ui/AppTheme.kt"]
+    SCREEN_FILES = [f for f in UI_FILES if f not in ("ui/AppTheme.kt", "ui/SplashScreen.kt")]
 
     @pytest.mark.parametrize("filepath", SCREEN_FILES)
     def test_uses_8dp_corners(self, filepath):
