@@ -30,26 +30,19 @@ import com.discordbotmaker.android.ui.theme.AppColors
 import kotlin.math.roundToInt
 
 /**
- * OrionBubble — A floating action button for the Asistente Orión AI assistant.
+ * OrionBubble — Floating action button for Asistente Orion.
  *
- * Features:
- * - Blue bot icon with antenna visuals (📡 + blurple glow ring)
- * - Draggable by the user (simulated via Compose offset)
- * - Designed to sit at bottom-right by default
- * - Call [onClick] to open the Asistente Orión chat screen
- *
- * Usage: Place inside a Box(Modifier.fillMaxSize()) overlay in your Scaffold.
+ * Minimal design: Blurple FAB with bot icon, draggable, pulse glow ring.
+ * Tap to open the Orion chat screen.
  */
 @Composable
 fun OrionBubble(
     onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Draggable offset state
     var offsetX by remember { mutableFloatStateOf(0f) }
     var offsetY by remember { mutableFloatStateOf(0f) }
 
-    // Subtle pulse animation for the outer ring
     val pulseTransition = rememberInfiniteTransition(label = "orion_pulse")
     val pulseScale by pulseTransition.animateFloat(
         initialValue = 0.85f,
@@ -72,7 +65,6 @@ fun OrionBubble(
                 }
             }
     ) {
-        // Outer glow ring
         Box(
             modifier = Modifier
                 .size((56 * pulseScale).dp)
@@ -81,7 +73,6 @@ fun OrionBubble(
                 .background(AppColors.Primary.copy(alpha = 0.18f))
         )
 
-        // Main FAB button
         Surface(
             onClick = onClick,
             modifier = Modifier
@@ -100,12 +91,10 @@ fun OrionBubble(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(top = 2.dp)
                 ) {
-                    // Antenna visuals — two small dots above the bot icon
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        // Left antenna dot
                         Box(
                             modifier = Modifier
                                 .size(3.dp)
@@ -113,7 +102,6 @@ fun OrionBubble(
                                 .background(Color.White.copy(alpha = 0.8f))
                         )
                         Spacer(Modifier.width(8.dp))
-                        // Right antenna dot
                         Box(
                             modifier = Modifier
                                 .size(3.dp)
@@ -124,7 +112,6 @@ fun OrionBubble(
 
                     Spacer(Modifier.height(1.dp))
 
-                    // Bot face — simplified robot icon
                     Box(
                         modifier = Modifier
                             .size(22.dp)
@@ -137,7 +124,6 @@ fun OrionBubble(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Left eye
                             Box(
                                 modifier = Modifier
                                     .size(4.dp)
@@ -145,7 +131,6 @@ fun OrionBubble(
                                     .background(Color.White)
                             )
                             Spacer(Modifier.width(5.dp))
-                            // Right eye
                             Box(
                                 modifier = Modifier
                                     .size(4.dp)
@@ -157,9 +142,8 @@ fun OrionBubble(
 
                     Spacer(Modifier.height(1.dp))
 
-                    // "Orión" label below the icon
                     Text(
-                        text = "Orión",
+                        text = "Orion",
                         color = Color.White,
                         fontSize = 7.sp,
                         fontWeight = FontWeight.Bold,
