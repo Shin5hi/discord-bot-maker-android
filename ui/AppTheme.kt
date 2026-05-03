@@ -10,6 +10,21 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+// ─── Grid Branding Identity ──────────────────────────────────────────────────
+//
+// Brand:    Grid — Emergent Assistant
+// Logo:     Minimalist geometric "G" — clean intersecting lines forming a grid
+//           pattern within a rounded square. Rendered as vector/SVG for all
+//           density buckets (mdpi through xxxhdpi).
+// Colors:   Discord Blurple (#5865F2) as primary accent;
+//           Deep Charcoal (#1E1F22) as the darkest surface/input tone.
+//           Full palette below follows the Discord Design Language with Grid
+//           branding layered on top.
+// Typeface: Inter / Roboto — system sans-serif stack. No monospace anywhere.
+//           Professional, legible, modern — matching Grid's clean identity.
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ─── Discord Design Language — Color Palette ─────────────────────────────────
 
 object AppColors {
@@ -20,7 +35,7 @@ object AppColors {
     val SurfaceBorder    = Color(0xFF3F4147)
     val InputBackground  = Color(0xFF1E1F22)
 
-    // Primary accent — Discord Blurple
+    // Primary accent — Discord Blurple (Grid brand primary)
     val Primary          = Color(0xFF5865F2)
     val PrimaryLight     = Color(0xFF7984F5)
     val PrimaryDim       = Color(0xFF3C45A5)
@@ -78,7 +93,10 @@ private val AppDarkColorScheme = darkColorScheme(
     outlineVariant     = Color(0xFF35373C)
 )
 
-// ─── Typography — Clean Sans-Serif (Discord uses gg sans / system default) ───
+// ─── Typography — Inter / Roboto Sans-Serif (Grid professional identity) ─────
+// All text uses the system SansSerif stack (Inter on Compose Desktop, Roboto on
+// Android) to maintain Grid's clean, modern, professional brand direction.
+// Only SansSerif is permitted — no fixed-width font families anywhere.
 
 val AppTypography = Typography(
     displayLarge = TextStyle(
