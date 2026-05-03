@@ -31,19 +31,21 @@ import com.discordbotmaker.android.ui.dashboard.MainDashboardScreen
 import com.discordbotmaker.android.ui.launch.BotCreationScreen
 import com.discordbotmaker.android.ui.library.ToolLibraryScreen
 import com.discordbotmaker.android.ui.splash.SplashScreen
+import com.discordbotmaker.android.ui.splash.OriginLoadingScreen
 import com.discordbotmaker.android.ui.doubt.DoubtAssistantScreen
 import com.discordbotmaker.android.ui.theme.AppColors
 
 object AppRoutes {
-    const val SPLASH          = "splash"
-    const val DASHBOARD       = "dashboard"
-    const val TOOL_LIBRARY    = "tool_library"
-    const val SETTINGS        = "settings"
-    const val LIVE_CONSOLE    = "live_console"
-    const val AUTO_MOD        = "auto_mod"
-    const val COMMAND_BUILDER = "command_builder"
-    const val BOT_CREATION      = "bot_creation"
-    const val DOUBT_ASSISTANT  = "doubt_assistant"
+    const val SPLASH               = "splash"
+    const val GRID_ORIGIN_LOADING  = "grid_origin_loading"
+    const val DASHBOARD            = "dashboard"
+    const val TOOL_LIBRARY         = "tool_library"
+    const val SETTINGS             = "settings"
+    const val LIVE_CONSOLE         = "live_console"
+    const val AUTO_MOD             = "auto_mod"
+    const val COMMAND_BUILDER      = "command_builder"
+    const val BOT_CREATION         = "bot_creation"
+    const val DOUBT_ASSISTANT      = "doubt_assistant"
 }
 
 private val bottomNavRoutes = setOf(
@@ -52,9 +54,10 @@ private val bottomNavRoutes = setOf(
     AppRoutes.SETTINGS
 )
 
-// Screens where the Orión FAB should NOT appear
+// Screens where the Orion FAB should NOT appear
 private val hideOrionRoutes = setOf(
     AppRoutes.SPLASH,
+    AppRoutes.GRID_ORIGIN_LOADING,
     AppRoutes.DOUBT_ASSISTANT
 )
 
@@ -105,6 +108,19 @@ fun AppNavGraph(
                     )
                 }
 
+                // Grid Origin Loading --- the branded animated loading screen
+                // Accessible from the launch flow; navigates to Dashboard on completion.
+                composable(AppRoutes.GRID_ORIGIN_LOADING) {
+                    OriginLoadingScreen(
+                        onLoadingComplete = {
+                            navController.navigate(AppRoutes.DASHBOARD) {
+                                popUpTo(AppRoutes.GRID_ORIGIN_LOADING) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+
                 composable(AppRoutes.DASHBOARD) {
                     MainDashboardScreen(
                         botStatus = botStatus,
@@ -136,7 +152,7 @@ fun AppNavGraph(
                     ToolLibraryScreen(
                         onToolSelected = { toolName ->
                             when (toolName) {
-                                "Asistente Orión" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+                                "Asistente Orion" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
                                     launchSingleTop = true
                                 }
                                 else -> { }
@@ -170,7 +186,7 @@ fun AppNavGraph(
                 }
             }
 
-            // Orión Floating Bubble — Global overlay
+            // -- Orion Floating Bubble --- Global overlay --
             if (showOrionBubble) {
                 OrionBubble(
                     onClick = {
@@ -196,7 +212,7 @@ private fun SettingsPlaceholderScreen() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "⚙️", fontSize = 48.sp)
+            Text(text = "⚙", fontSize = 48.sp)
             Text(
                 text = "Settings",
                 color = AppColors.TextPrimary,

@@ -34,22 +34,25 @@ import androidx.compose.ui.unit.sp
 import com.discordbotmaker.android.ui.theme.AppColors
 import kotlinx.coroutines.delay
 
-// ─── Grid Origin — Loading Screen ────────────────────────────────────────────
+// --- Grid Origin --- Animated Loading Screen ---
 //
-// The branded loading screen for Grid Origin. Features:
-// • Deep charcoal (#1E1F22) solid background
-// • Centered "G" logo inside a rounded square with Blurple fill
-// • Continuous circular sweep ring around the logo using InfiniteTransition
-// • "Grid Origin" title text below the logo
-// • "Crea, Organiza, Avanza." slogan
-// • Staged entrance animation: logo scale-in → text fade → slogan fade
-// • Auto-navigates after the entrance sequence completes
+// The official branded loading screen for the Grid Origin engine.
+// Grid Origin is the bot/server creation engine powering the app.
 //
-// ─────────────────────────────────────────────────────────────────────────────
+// Visual design:
+// - Official Charcoal (#313338) solid background (AppColors.Background)
+// - Centered blocky "G" logo in Blurple (#5865F2) rounded square
+// - Continuous smooth circular sweep/ring animation using InfiniteTransition
+// - "Grid Origin" title (bold, white) below the logo
+// - "Crea, Organiza, Avanza." slogan (smaller, light gray) below the title
+// - Staged entrance animation: logo scale-in -> text fade -> slogan fade
+// - Auto-navigates after the entrance sequence completes
+//
+// ---
 
 /**
- * The Blurple sweep ring that rotates continuously around the logo.
- * Uses [rememberInfiniteTransition] for a smooth, never-ending arc sweep.
+ * The Blurple sweep ring that rotates continuously around the "G" logo.
+ * Uses [rememberInfiniteTransition] for a smooth, never-ending circular arc sweep.
  */
 @Composable
 fun SweepLoadingRing(
@@ -61,7 +64,7 @@ fun SweepLoadingRing(
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "sweepRing")
 
-    // Rotation angle — full 360° loop
+    // Rotation angle --- full 360 continuous loop
     val rotationAngle by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -88,7 +91,7 @@ fun SweepLoadingRing(
         val arcSize = Size(size.width, size.height)
         val topLeft = Offset.Zero
 
-        // Background track — subtle ring outline
+        // Background track --- subtle ring outline
         drawArc(
             color = sweepColor.copy(alpha = 0.10f),
             startAngle = 0f,
@@ -99,7 +102,7 @@ fun SweepLoadingRing(
             style = stroke
         )
 
-        // Sweep arc — the animated loading indicator (120° arc)
+        // Sweep arc --- the animated circular loading indicator (120 arc)
         drawArc(
             brush = Brush.sweepGradient(
                 colors = listOf(
@@ -119,7 +122,13 @@ fun SweepLoadingRing(
 }
 
 /**
- * Grid Origin loading screen — the app's branded entry point.
+ * Grid Origin animated loading screen --- the app's official branded entry point.
+ * Grid Origin is the bot/server creation engine.
+ *
+ * Background: Official Charcoal (#313338) via AppColors.Background.
+ * Logo: Blocky "G" in Blurple (#5865F2) rounded square (96dp, 20dp corners).
+ * Animation: Continuous smooth circular sweep ring via InfiniteTransition.
+ * Text: "Grid Origin" (bold, white) + "Crea, Organiza, Avanza." (light gray).
  *
  * @param onLoadingComplete Called when the entrance animation finishes and the
  *   screen is ready to hand off to the next destination.
@@ -128,7 +137,7 @@ fun SweepLoadingRing(
 fun OriginLoadingScreen(
     onLoadingComplete: () -> Unit = {}
 ) {
-    // ── Entrance animation state ────────────────────────────────────────────
+    // -- Entrance animation state --
     val logoScale = remember { Animatable(0.7f) }
     val titleAlpha = remember { Animatable(0f) }
     val sloganAlpha = remember { Animatable(0f) }
@@ -154,11 +163,11 @@ fun OriginLoadingScreen(
         onLoadingComplete()
     }
 
-    // ── Charcoal background ─────────────────────────────────────────────────
+    // -- Official Charcoal (#313338) background --
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.InputBackground), // #1E1F22 — deep charcoal
+            .background(AppColors.Background), // #313338 --- Official Charcoal
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -166,18 +175,18 @@ fun OriginLoadingScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.scale(logoScale.value)
         ) {
-            // ── Logo + Sweep Ring ───────────────────────────────────────────
+            // -- Blocky "G" Logo + Continuous Sweep Ring --
             Box(
                 contentAlignment = Alignment.Center
             ) {
-                // Continuous sweep ring around the logo
+                // Continuous smooth circular sweep ring surrounding the logo
                 SweepLoadingRing(
                     ringSize = 140.dp,
                     strokeWidth = 3.dp,
-                    sweepColor = AppColors.Primary // Blurple
+                    sweepColor = AppColors.Primary // Blurple #5865F2
                 )
 
-                // "G" logo — Blurple rounded square
+                // Blocky "G" logo --- Blurple (#5865F2) rounded square
                 Box(
                     modifier = Modifier
                         .size(96.dp)
@@ -198,10 +207,10 @@ fun OriginLoadingScreen(
 
             Spacer(Modifier.height(36.dp))
 
-            // ── "Grid Origin" title ─────────────────────────────────────────
+            // -- "Grid Origin" title --- bold, white --
             Text(
                 text = "Grid Origin",
-                color = AppColors.TextPrimary,
+                color = AppColors.TextPrimary, // White
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.SansSerif,
@@ -211,10 +220,10 @@ fun OriginLoadingScreen(
 
             Spacer(Modifier.height(10.dp))
 
-            // ── Slogan ──────────────────────────────────────────────────────
+            // -- Slogan --- smaller, light gray --
             Text(
                 text = "Crea, Organiza, Avanza.",
-                color = AppColors.TextSecondary,
+                color = AppColors.TextSecondary, // Light gray #B5BAC1
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = FontFamily.SansSerif,
@@ -223,7 +232,7 @@ fun OriginLoadingScreen(
             )
         }
 
-        // ── Version stamp ───────────────────────────────────────────────────
+        // -- Version stamp --
         Text(
             text = "v2.0",
             color = AppColors.TextMuted.copy(alpha = 0.40f),
