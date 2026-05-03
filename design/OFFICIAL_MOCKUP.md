@@ -1,15 +1,13 @@
-# 🏆 La Identidad Oficial de Grid (Trilogía)
+# 🏆 Mockup Maestro DEFINITIVO: Grid
 
-El diseño oficial no es una imagen combinada, sino este set de 3 capturas que definen el estándar premium de la app.
+Este es el único y absoluto referente visual del proyecto **Grid**. Esta imagen combina el branding, el hub principal y el árbol de herramientas en su estado de perfección final.
 
-## 1. Vibe de Marca (Isométrica)
-![Isometric](https://static.prod-images.emergentagent.com/jobs/85fd1fa5-923c-402f-b2c2-f78866b3e4b5/images/53c5ca95698210420f5ca4b2d3552297bdd7632a5303c43a58eca4f1bde1c6fe.png)
+![Grid Ultimate Master Mockup](https://customer-assets.emergentagent.com/wingman/85fd1fa5-923c-402f-b2c2-f78866b3e4b5/attachments/11ceb6bc24a042c283e920a68ac729c7_a9de61dde45840fd83c68691cb34b5b3_photo.jpg)
 
-## 2. Precisión Técnica (Detalle del Árbol)
-![Tree Detail](https://static.prod-images.emergentagent.com/jobs/85fd1fa5-923c-402f-b2c2-f78866b3e4b5/images/a38aad3ec0b262721405ec9c128266252bda9eba7de464b4fbe6ff920f28f327.png)
+## 📌 Especificaciones Finales
+1. **Branding:** Eslogan "Crea, Organiza, Avanza." y logo 2D del robot azul.
+2. **UI:** Estilo Discord oficial, alta densidad de información, sin efectos 3D ni neones.
+3. **Asistente:** Burbuja plana de Orión omnipresente.
 
-## 3. Experiencia de Usuario (Lifestyle + Orión)
-![Lifestyle](https://static.prod-images.emergentagent.com/jobs/85fd1fa5-923c-402f-b2c2-f78866b3e4b5/images/a5e07ff041d34a0e4b67a82177d40e1a2a35025e5f66e46884a4b22ce5afa3e7.png)
-
----
-**Nota para el equipo:** Estas 3 imágenes son innegociables. Cada botón y cada sombra en la app real debe nacer de aquí.
+--- 
+*Este diseño es la Constitución del proyecto. No se permiten desviaciones.*
