@@ -2,6 +2,8 @@
 Validation tests for the Grid Origin Loading Screen.
 Ensures OriginLoadingScreen.kt implements the branded loading experience
 with InfiniteTransition sweep ring, correct colors, and text content.
+Also validates AppNavigation.kt has the GRID_ORIGIN_LOADING route and
+COORDINATION.md documents Grid Origin as the official engine name.
 """
 import os
 import pytest
@@ -15,7 +17,7 @@ def read_file(relative_path: str) -> str:
         return f.read()
 
 
-# ─── OriginLoadingScreen.kt Tests ─────────────────────────────────────────────
+# --- OriginLoadingScreen.kt Tests ---
 
 class TestOriginLoadingScreenExists:
     """Verify the file exists and has the composable."""
@@ -77,7 +79,7 @@ class TestOriginLoadingAnimation:
 
 
 class TestOriginLoadingColors:
-    """Verify the screen uses official AppColors."""
+    """Verify the screen uses official AppColors with Charcoal #313338 background."""
 
     def setup_method(self):
         self.content = read_file("ui/OriginLoadingScreen.kt")
@@ -85,8 +87,20 @@ class TestOriginLoadingColors:
     def test_imports_app_colors(self):
         assert "import com.discordbotmaker.android.ui.theme.AppColors" in self.content
 
-    def test_charcoal_background(self):
-        assert "AppColors.InputBackground" in self.content
+    def test_official_charcoal_background(self):
+        """Background must be AppColors.Background (#313338), NOT InputBackground."""
+        assert "AppColors.Background" in self.content
+
+    def test_background_not_input_background(self):
+        """The background must NOT use InputBackground (#1E1F22) --- must use official charcoal."""
+        lines = self.content.split('\n')
+        bg_line_found = False
+        for i, line in enumerate(lines):
+            if '.background(AppColors.' in line and 'fillMaxSize' in self.content[max(0, self.content.index(line)-200):self.content.index(line)]:
+                bg_line_found = True
+                assert 'AppColors.Background' in line, \
+                    f"Root background should use AppColors.Background, found: {line.strip()}"
+        assert bg_line_found, "Could not find root .background(AppColors.*) modifier"
 
     def test_blurple_primary(self):
         assert "AppColors.Primary" in self.content
@@ -192,7 +206,7 @@ class TestOriginLoadingLayout:
         assert "Alignment.Center" in self.content
 
 
-# ─── SplashScreen.kt Delegation Tests ────────────────────────────────────────
+# --- SplashScreen.kt Delegation Tests ---
 
 class TestSplashScreenDelegation:
     """Verify SplashScreen delegates to OriginLoadingScreen."""
@@ -216,7 +230,7 @@ class TestSplashScreenDelegation:
         assert "package com.discordbotmaker.android.ui.splash" in self.content
 
 
-# ─── design/branding.md Tests ────────────────────────────────────────────────
+# --- design/branding.md Tests ---
 
 class TestBrandingDoc:
     """Verify branding.md documents the logo and animation spec."""
@@ -234,7 +248,7 @@ class TestBrandingDoc:
         assert "#5865F2" in self.content
 
     def test_mentions_charcoal_hex(self):
-        assert "#1E1F22" in self.content
+        assert "#1E1F22" in self.content or "#313338" in self.content
 
     def test_mentions_slogan(self):
         assert "Crea, Organiza, Avanza." in self.content
@@ -255,7 +269,7 @@ class TestBrandingDoc:
         assert "mdpi" in self.content or "xxxhdpi" in self.content
 
 
-# ─── COORDINATION.md Update Tests ────────────────────────────────────────────
+# --- COORDINATION.md Update Tests ---
 
 class TestCoordinationGridOrigin:
     """Verify COORDINATION.md documents Grid Origin loading screen."""
@@ -294,7 +308,33 @@ class TestCoordinationGridOrigin:
         assert "Grid Origin" in self.content
 
 
-# ─── Navigation Compatibility Tests ──────────────────────────────────────────
+class TestCoordinationGridOriginEngine:
+    """Verify COORDINATION.md documents Grid Origin as the official engine name."""
+
+    def setup_method(self):
+        self.content = read_file("COORDINATION.md")
+
+    def test_engine_definition(self):
+        assert "bot/server creation engine" in self.content or "creation engine" in self.content
+
+    def test_grid_origin_engine_section(self):
+        assert "Grid Origin" in self.content
+
+    def test_documents_grid_origin_loading_route(self):
+        assert "GRID_ORIGIN_LOADING" in self.content
+
+    def test_documents_official_charcoal(self):
+        assert "#313338" in self.content
+
+    def test_documents_animated_loading_sequence(self):
+        assert "animated loading" in self.content.lower()
+
+    def test_background_is_313338_in_coordination(self):
+        """COORDINATION should reference #313338 as the official charcoal."""
+        assert "Official Charcoal" in self.content
+
+
+# --- Navigation Tests --- GRID_ORIGIN_LOADING Route ---
 
 class TestNavigationStillWorks:
     """Verify AppNavigation.kt still references SplashScreen correctly."""
@@ -313,3 +353,68 @@ class TestNavigationStillWorks:
 
     def test_splash_is_start_destination(self):
         assert "startDestination = AppRoutes.SPLASH" in self.content
+
+
+class TestGridOriginLoadingRoute:
+    """Verify the GRID_ORIGIN_LOADING route is properly added."""
+
+    def setup_method(self):
+        self.content = read_file("ui/AppNavigation.kt")
+
+    def test_route_constant_defined(self):
+        assert 'GRID_ORIGIN_LOADING' in self.content
+
+    def test_route_value(self):
+        assert '"grid_origin_loading"' in self.content
+
+    def test_composable_destination_exists(self):
+        assert 'composable(AppRoutes.GRID_ORIGIN_LOADING)' in self.content
+
+    def test_origin_loading_screen_import(self):
+        assert "import com.discordbotmaker.android.ui.splash.OriginLoadingScreen" in self.content
+
+    def test_origin_loading_screen_used_in_route(self):
+        """OriginLoadingScreen must be called inside the GRID_ORIGIN_LOADING composable."""
+        assert "OriginLoadingScreen(" in self.content
+
+    def test_navigates_to_dashboard_on_complete(self):
+        """The GRID_ORIGIN_LOADING route should navigate to DASHBOARD on completion."""
+        assert "AppRoutes.DASHBOARD" in self.content
+
+    def test_pops_origin_loading_inclusive(self):
+        """Should pop GRID_ORIGIN_LOADING from back stack."""
+        assert "GRID_ORIGIN_LOADING" in self.content
+        assert "inclusive = true" in self.content
+
+    def test_hidden_from_orion_bubble(self):
+        """GRID_ORIGIN_LOADING should be in hideOrionRoutes."""
+        assert "AppRoutes.GRID_ORIGIN_LOADING" in self.content
+        lines = self.content.split('\n')
+        in_hide_section = False
+        found = False
+        for line in lines:
+            if 'hideOrionRoutes' in line:
+                in_hide_section = True
+            if in_hide_section and 'GRID_ORIGIN_LOADING' in line:
+                found = True
+                break
+            if in_hide_section and line.strip() == ')':
+                break
+        assert found, "GRID_ORIGIN_LOADING not found in hideOrionRoutes"
+
+
+class TestAppThemeCharcoalColor:
+    """Verify AppTheme.kt has the correct charcoal background (#313338)."""
+
+    def setup_method(self):
+        self.content = read_file("ui/AppTheme.kt")
+
+    def test_background_is_313338(self):
+        assert "0xFF313338" in self.content
+
+    def test_background_named_correctly(self):
+        assert "val Background" in self.content
+        for line in self.content.split('\n'):
+            if 'val Background' in line:
+                assert '313338' in line, f"Background should be #313338, got: {line.strip()}"
+                break
