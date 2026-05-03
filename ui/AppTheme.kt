@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.sp
 //           rounded square. Rendered as vector/SVG for all density buckets.
 // Primary:  Discord Blurple (#5865F2) — THE brand color for all interactive
 //           elements, active states, and CTA buttons.
-// Surface:  Deep gray palette directly from Discord's dark theme spec.
-// Typeface: Inter / Roboto — system SansSerif stack only. Zero monospace.
+// Surface:  Deep Charcoal gray palette from Discord's dark theme spec.
+// Typeface: Inter / Roboto — system SansSerif stack only. No monospace.
 //
 // High-Fidelity alignment: Every hex value verified against Discord's
 // official dark theme (desktop 2025/2026). Card corners at 8-12dp.
