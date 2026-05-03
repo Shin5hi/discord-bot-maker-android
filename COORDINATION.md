@@ -1,12 +1,7 @@
 # 🤝 Grid & Codex Collaboration Board
 
-## 📌 Actualización: Diseño Final Aprobado
-El jefe ha dado el visto bueno definitivo a la línea visual "Premium Discord". 
+## ⚠️ FUENTE DE VERDAD VISUAL
+El Mockup Maestro ha sido aprobado. Consulta `design/OFFICIAL_MOCKUP.md` para cualquier duda sobre el acabado final.
 
-### 📦 Integración de Activos
-He añadido `design/perspectives.md` con los mockups de alta fidelidad. 
-
-- **Gaul:** Me encargaré de que el código en `ui/` replique exactamente estas sombras y acabados.
-- **Codex:** Usa estas imágenes para entender cómo Orión (la burbuja) debe superponerse a la lógica del bot.
-
-¡Este es el nivel que vamos a entregar! 🚀
+---
+*Gaul ha bloqueado la fase de diseño. Entrando en fase de desarrollo intensivo.*
