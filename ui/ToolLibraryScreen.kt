@@ -44,83 +44,84 @@ data class ToolCategory(
 
 private val toolCategories = listOf(
     ToolCategory(
-        icon = "🚀",
+        icon = "\uD83D\uDE80",
         title = "Launch & Deploy",
         accentColor = AppColors.AccentRocket,
         tools = listOf(
-            ToolItem("🔑", "Token Connect", "Link your Discord bot token securely"),
-            ToolItem("⚡", "Quick Deploy", "One-tap deploy to cloud hosting"),
-            ToolItem("📦", "Bot Packager", "Export bot config as shareable package"),
-            ToolItem("🔄", "Hot Reload", "Push code changes without restart")
+            ToolItem("\uD83D\uDD11", "Token Connect", "Link your Discord bot token securely"),
+            ToolItem("\u26A1", "Quick Deploy", "One-tap deploy to cloud hosting"),
+            ToolItem("\uD83D\uDCE6", "Bot Packager", "Export bot config as shareable package"),
+            ToolItem("\uD83D\uDD04", "Hot Reload", "Push code changes without restart")
         )
     ),
     ToolCategory(
-        icon = "🛡️",
+        icon = "\uD83D\uDEE1\uFE0F",
         title = "Moderation",
         accentColor = AppColors.AccentShield,
         tools = listOf(
-            ToolItem("🚫", "Auto Ban", "Ban users matching configurable rules"),
-            ToolItem("🧹", "Message Purge", "Bulk delete messages by filter criteria"),
-            ToolItem("⚠️", "Warning System", "Track user infractions with escalation"),
-            ToolItem("🔇", "Mute Manager", "Timeout users with duration presets"),
-            ToolItem("📋", "Audit Logger", "Log all mod actions to a channel")
+            ToolItem("\uD83D\uDEAB", "Auto Ban", "Ban users matching configurable rules"),
+            ToolItem("\uD83E\uDDF9", "Message Purge", "Bulk delete messages by filter criteria"),
+            ToolItem("\u26A0\uFE0F", "Warning System", "Track user infractions with escalation"),
+            ToolItem("\uD83D\uDD07", "Mute Manager", "Timeout users with duration presets"),
+            ToolItem("\uD83D\uDCCB", "Audit Logger", "Log all mod actions to a channel")
         )
     ),
     ToolCategory(
-        icon = "🧠",
+        icon = "\uD83E\uDDE0",
         title = "AI & Intelligence",
         accentColor = AppColors.AccentBrain,
         tools = listOf(
-            ToolItem("💬", "Chat AI", "GPT / Gemini powered conversational bot"),
-            ToolItem("🔍", "Toxicity Filter", "AI-powered content moderation"),
-            ToolItem("📝", "Auto Summary", "Summarize long conversations on demand"),
-            ToolItem("🎨", "Image Gen", "Generate images from text prompts", isPremium = true),
-            ToolItem("🌐", "Translator", "Real-time message translation")
+            ToolItem("\uD83D\uDCAC", "Chat AI", "GPT / Gemini powered conversational bot"),
+            ToolItem("\uD83D\uDD0D", "Toxicity Filter", "AI-powered content moderation"),
+            ToolItem("\uD83D\uDCDD", "Auto Summary", "Summarize long conversations on demand"),
+            ToolItem("\uD83C\uDFA8", "Image Gen", "Generate images from text prompts", isPremium = true),
+            ToolItem("\uD83C\uDF10", "Translator", "Real-time message translation")
         )
     ),
     ToolCategory(
-        icon = "⚡",
+        icon = "\u26A1",
         title = "Commands & Utilities",
         accentColor = AppColors.AccentBolt,
         tools = listOf(
-            ToolItem("📌", "Slash Commands", "Visual slash-command builder"),
-            ToolItem("🎭", "Role Manager", "Auto-assign roles on join/react"),
-            ToolItem("📊", "Polls", "Create interactive polls with reactions"),
-            ToolItem("⏰", "Reminders", "Schedule timed announcements"),
-            ToolItem("🎫", "Ticket System", "Support ticket creation & management")
+            ToolItem("\uD83D\uDCCC", "Slash Commands", "Visual slash-command builder"),
+            ToolItem("\uD83C\uDFAD", "Role Manager", "Auto-assign roles on join/react"),
+            ToolItem("\uD83D\uDCCA", "Polls", "Create interactive polls with reactions"),
+            ToolItem("\u23F0", "Reminders", "Schedule timed announcements"),
+            ToolItem("\uD83C\uDFAB", "Ticket System", "Support ticket creation & management"),
+            ToolItem("\uD83D\uDCE1", "Doubt Assistant", "AI-powered query assistant for bot help")
         )
     ),
     ToolCategory(
-        icon = "🎵",
+        icon = "\uD83C\uDFB5",
         title = "Music & Audio",
         accentColor = AppColors.AccentMusic,
         tools = listOf(
-            ToolItem("▶️", "Music Player", "Stream from YouTube, Spotify, SoundCloud"),
-            ToolItem("📻", "Radio Mode", "24/7 lofi / genre radio streams"),
-            ToolItem("🎤", "DJ Queue", "User-managed music queue with voting"),
-            ToolItem("🔊", "Soundboard", "Play custom sound effects in voice")
+            ToolItem("\u25B6\uFE0F", "Music Player", "Stream from YouTube, Spotify, SoundCloud"),
+            ToolItem("\uD83D\uDCFB", "Radio Mode", "24/7 lofi / genre radio streams"),
+            ToolItem("\uD83C\uDFA4", "DJ Queue", "User-managed music queue with voting"),
+            ToolItem("\uD83D\uDD0A", "Soundboard", "Play custom sound effects in voice")
         )
     ),
     ToolCategory(
-        icon = "📈",
+        icon = "\uD83D\uDCC8",
         title = "Analytics & Engagement",
         accentColor = AppColors.AccentChart,
         tools = listOf(
-            ToolItem("📊", "Server Stats", "Member count, activity graphs, growth"),
-            ToolItem("🏆", "Leaderboards", "XP-based ranking with role rewards"),
-            ToolItem("👋", "Welcome System", "Custom welcome messages & DMs"),
-            ToolItem("📅", "Event Scheduler", "Create & RSVP server events")
+            ToolItem("\uD83D\uDCCA", "Server Stats", "Member count, activity graphs, growth"),
+            ToolItem("\uD83C\uDFC6", "Leaderboards", "XP-based ranking with role rewards"),
+            ToolItem("\uD83D\uDC4B", "Welcome System", "Custom welcome messages & DMs"),
+            ToolItem("\uD83D\uDCC5", "Event Scheduler", "Create & RSVP server events")
         )
     ),
     ToolCategory(
-        icon = "⚙️",
+        icon = "\u2699\uFE0F",
         title = "Configuration",
         accentColor = AppColors.AccentGear,
         tools = listOf(
-            ToolItem("🎨", "Embed Builder", "Visual rich embed composer"),
-            ToolItem("🔐", "Permissions", "Fine-grained command permission editor"),
-            ToolItem("📂", "Channel Router", "Route bot output to specific channels"),
-            ToolItem("🌙", "Status Rotator", "Cycle bot presence/status messages")
+            ToolItem("\uD83C\uDFA8", "Embed Builder", "Visual rich embed composer"),
+            ToolItem("\uD83D\uDD10", "Permissions", "Fine-grained command permission editor"),
+            ToolItem("\uD83D\uDCC2", "Channel Router", "Route bot output to specific channels"),
+            ToolItem("\uD83C\uDF19", "Status Rotator", "Cycle bot presence/status messages")
         )
     )
 )
@@ -178,7 +179,7 @@ fun ToolLibraryScreen(
                         .padding(horizontal = 14.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "🔍", fontSize = 16.sp)
+                    Text(text = "\uD83D\uDD0D", fontSize = 16.sp)
                     Spacer(Modifier.width(10.dp))
                     Text(
                         text = "Search tools\u2026",
@@ -197,6 +198,10 @@ fun ToolLibraryScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            FeaturedModuleCard(onToolSelected = onToolSelected)
+
+            Spacer(Modifier.height(4.dp))
+
             toolCategories.forEach { category ->
                 ToolCategoryCard(
                     category = category,
@@ -204,6 +209,108 @@ fun ToolLibraryScreen(
                 )
             }
             Spacer(Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+private fun FeaturedModuleCard(
+    onToolSelected: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.cardColors(containerColor = AppColors.Surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "\u2B50", fontSize = 14.sp)
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    text = "FEATURED",
+                    color = AppColors.Warning,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif,
+                    letterSpacing = 1.sp
+                )
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(AppColors.Primary.copy(alpha = 0.08f))
+                    .clickable { onToolSelected("Doubt Assistant") }
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(AppColors.Primary.copy(alpha = 0.15f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "\uD83D\uDCE1", fontSize = 20.sp)
+                }
+
+                Spacer(Modifier.width(12.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Doubt Assistant",
+                            color = AppColors.TextPrimary,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Surface(
+                            color = AppColors.Success.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(4.dp)
+                        ) {
+                            Text(
+                                text = "NEW",
+                                color = AppColors.Success,
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 0.5.sp,
+                                modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(3.dp))
+                    Text(
+                        text = "AI-powered assistant for bot setup queries and troubleshooting",
+                        color = AppColors.TextSecondary,
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        maxLines = 2
+                    )
+                }
+
+                Spacer(Modifier.width(8.dp))
+
+                Surface(
+                    color = AppColors.Primary,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.clickable { onToolSelected("Doubt Assistant") }
+                ) {
+                    Text(
+                        text = "Open",
+                        color = AppColors.TextPrimary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily.SansSerif,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -266,7 +373,7 @@ private fun ToolCategoryCard(
                 }
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "\u203a",
+                    text = "\u203A",
                     color = if (isExpanded) AppColors.Primary else AppColors.TextMuted,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,

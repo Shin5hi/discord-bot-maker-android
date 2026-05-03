@@ -27,6 +27,7 @@ import com.discordbotmaker.android.ui.console.LiveConsoleViewModel
 import com.discordbotmaker.android.ui.dashboard.BotStatus
 import com.discordbotmaker.android.ui.dashboard.GridBottomNavBar
 import com.discordbotmaker.android.ui.dashboard.MainDashboardScreen
+import com.discordbotmaker.android.ui.doubt.DoubtAssistantScreen
 import com.discordbotmaker.android.ui.launch.BotCreationScreen
 import com.discordbotmaker.android.ui.library.ToolLibraryScreen
 import com.discordbotmaker.android.ui.splash.SplashScreen
@@ -40,7 +41,8 @@ object AppRoutes {
     const val LIVE_CONSOLE    = "live_console"
     const val AUTO_MOD        = "auto_mod"
     const val COMMAND_BUILDER = "command_builder"
-    const val BOT_CREATION    = "bot_creation"
+    const val BOT_CREATION      = "bot_creation"
+    const val DOUBT_ASSISTANT  = "doubt_assistant"
 }
 
 private val bottomNavRoutes = setOf(
@@ -123,7 +125,14 @@ fun AppNavGraph(
 
             composable(AppRoutes.TOOL_LIBRARY) {
                 ToolLibraryScreen(
-                    onToolSelected = { toolName -> }
+                    onToolSelected = { toolName ->
+                        when (toolName) {
+                            "Doubt Assistant" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+                                launchSingleTop = true
+                            }
+                            else -> { }
+                        }
+                    }
                 )
             }
 
@@ -146,6 +155,10 @@ fun AppNavGraph(
             composable(AppRoutes.BOT_CREATION) {
                 BotCreationScreen()
             }
+
+            composable(AppRoutes.DOUBT_ASSISTANT) {
+                DoubtAssistantScreen()
+            }
         }
     }
 }
@@ -159,7 +172,7 @@ private fun SettingsPlaceholderScreen() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "⚙️", fontSize = 48.sp)
+            Text(text = "\u2699\uFE0F", fontSize = 48.sp)
             Text(
                 text = "Settings",
                 color = AppColors.TextPrimary,
