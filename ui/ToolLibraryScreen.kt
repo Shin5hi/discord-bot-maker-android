@@ -7,6 +7,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,111 +21,131 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.discordbotmaker.android.ui.theme.AppColors
 
-data class ToolItem(
-    val icon: String,
+// ─── Tree Node Models ─────────────────────────────────────────────────────────
+
+/**
+ * Represents a leaf node (channel) in the server tree.
+ * [nodeType] controls the icon prefix: TEXT, VOICE, ANNOUNCEMENT, STAGE, FORUM.
+ */
+data class TreeChannel(
     val name: String,
-    val description: String,
-    val isPremium: Boolean = false
+    val nodeType: ChannelType = ChannelType.TEXT,
+    val isPremium: Boolean = false,
+    val description: String = ""
 )
 
-data class ToolCategory(
-    val icon: String,
-    val title: String,
-    val accentColor: Color,
-    val tools: List<ToolItem>
+enum class ChannelType { TEXT, VOICE, ANNOUNCEMENT, STAGE, FORUM }
+
+/**
+ * Represents a category (folder) in the server tree.
+ */
+data class TreeCategory(
+    val name: String,
+    val channels: List<TreeChannel>,
+    val accentColor: Color = AppColors.TextMuted
 )
 
-private val toolCategories = listOf(
-    ToolCategory(
-        icon = "\uD83D\uDE80",
-        title = "Launch & Deploy",
+// ─── Tree Data — Server Structure Mockup ──────────────────────────────────────
+
+private val serverTree = listOf(
+    TreeCategory(
+        name = "LAUNCH & DEPLOY",
         accentColor = AppColors.AccentRocket,
-        tools = listOf(
-            ToolItem("\uD83D\uDD11", "Token Connect", "Link your Discord bot token securely"),
-            ToolItem("\u26A1", "Quick Deploy", "One-tap deploy to cloud hosting"),
-            ToolItem("\uD83D\uDCE6", "Bot Packager", "Export bot config as shareable package"),
-            ToolItem("\uD83D\uDD04", "Hot Reload", "Push code changes without restart")
+        channels = listOf(
+            TreeChannel("token-connect", ChannelType.TEXT, description = "Link your Discord bot token securely"),
+            TreeChannel("quick-deploy", ChannelType.TEXT, description = "One-tap deploy to cloud hosting"),
+            TreeChannel("bot-packager", ChannelType.TEXT, description = "Export bot config as shareable package"),
+            TreeChannel("hot-reload", ChannelType.ANNOUNCEMENT, description = "Push code changes without restart")
         )
     ),
-    ToolCategory(
-        icon = "\uD83D\uDEE1\uFE0F",
-        title = "Moderation",
+    TreeCategory(
+        name = "MODERATION",
         accentColor = AppColors.AccentShield,
-        tools = listOf(
-            ToolItem("\uD83D\uDEAB", "Auto Ban", "Ban users matching configurable rules"),
-            ToolItem("\uD83E\uDDF9", "Message Purge", "Bulk delete messages by filter criteria"),
-            ToolItem("\u26A0\uFE0F", "Warning System", "Track user infractions with escalation"),
-            ToolItem("\uD83D\uDD07", "Mute Manager", "Timeout users with duration presets"),
-            ToolItem("\uD83D\uDCCB", "Audit Logger", "Log all mod actions to a channel")
+        channels = listOf(
+            TreeChannel("auto-ban", ChannelType.TEXT, description = "Ban users matching configurable rules"),
+            TreeChannel("message-purge", ChannelType.TEXT, description = "Bulk delete messages by filter criteria"),
+            TreeChannel("warning-system", ChannelType.ANNOUNCEMENT, description = "Track user infractions with escalation"),
+            TreeChannel("mute-manager", ChannelType.TEXT, description = "Timeout users with duration presets"),
+            TreeChannel("audit-logger", ChannelType.TEXT, description = "Log all mod actions to a channel")
         )
     ),
-    ToolCategory(
-        icon = "\uD83E\uDDE0",
-        title = "AI & Intelligence",
+    TreeCategory(
+        name = "AI & INTELLIGENCE",
         accentColor = AppColors.AccentBrain,
-        tools = listOf(
-            ToolItem("\uD83D\uDCAC", "Chat AI", "GPT / Gemini powered conversational bot"),
-            ToolItem("\uD83D\uDD0D", "Toxicity Filter", "AI-powered content moderation"),
-            ToolItem("\uD83D\uDCDD", "Auto Summary", "Summarize long conversations on demand"),
-            ToolItem("\uD83C\uDFA8", "Image Gen", "Generate images from text prompts", isPremium = true),
-            ToolItem("\uD83C\uDF10", "Translator", "Real-time message translation")
+        channels = listOf(
+            TreeChannel("chat-ai", ChannelType.TEXT, description = "GPT / Gemini powered conversational bot"),
+            TreeChannel("toxicity-filter", ChannelType.TEXT, description = "AI-powered content moderation"),
+            TreeChannel("auto-summary", ChannelType.TEXT, description = "Summarize long conversations on demand"),
+            TreeChannel("image-gen", ChannelType.TEXT, isPremium = true, description = "Generate images from text prompts"),
+            TreeChannel("translator", ChannelType.TEXT, description = "Real-time message translation")
         )
     ),
-    ToolCategory(
-        icon = "\u26A1",
-        title = "Commands & Utilities",
+    TreeCategory(
+        name = "COMMANDS & UTILITIES",
         accentColor = AppColors.AccentBolt,
-        tools = listOf(
-            ToolItem("\uD83D\uDCCC", "Slash Commands", "Visual slash-command builder"),
-            ToolItem("\uD83C\uDFAD", "Role Manager", "Auto-assign roles on join/react"),
-            ToolItem("\uD83D\uDCCA", "Polls", "Create interactive polls with reactions"),
-            ToolItem("\u23F0", "Reminders", "Schedule timed announcements"),
-            ToolItem("\uD83C\uDFAB", "Ticket System", "Support ticket creation & management"),
-            ToolItem("\uD83D\uDCE1", "Doubt Assistant", "AI-powered query assistant for bot help")
+        channels = listOf(
+            TreeChannel("slash-commands", ChannelType.TEXT, description = "Visual slash-command builder"),
+            TreeChannel("role-manager", ChannelType.TEXT, description = "Auto-assign roles on join/react"),
+            TreeChannel("polls", ChannelType.VOICE, description = "Create interactive polls with reactions"),
+            TreeChannel("reminders", ChannelType.ANNOUNCEMENT, description = "Schedule timed announcements"),
+            TreeChannel("ticket-system", ChannelType.TEXT, description = "Support ticket creation & management"),
+            TreeChannel("asistente-orión", ChannelType.STAGE, description = "AI-powered query assistant for bot help")
         )
     ),
-    ToolCategory(
-        icon = "\uD83C\uDFB5",
-        title = "Music & Audio",
+    TreeCategory(
+        name = "MUSIC & AUDIO",
         accentColor = AppColors.AccentMusic,
-        tools = listOf(
-            ToolItem("\u25B6\uFE0F", "Music Player", "Stream from YouTube, Spotify, SoundCloud"),
-            ToolItem("\uD83D\uDCFB", "Radio Mode", "24/7 lofi / genre radio streams"),
-            ToolItem("\uD83C\uDFA4", "DJ Queue", "User-managed music queue with voting"),
-            ToolItem("\uD83D\uDD0A", "Soundboard", "Play custom sound effects in voice")
+        channels = listOf(
+            TreeChannel("music-player", ChannelType.VOICE, description = "Stream from YouTube, Spotify, SoundCloud"),
+            TreeChannel("radio-mode", ChannelType.VOICE, description = "24/7 lofi / genre radio streams"),
+            TreeChannel("dj-queue", ChannelType.VOICE, description = "User-managed music queue with voting"),
+            TreeChannel("soundboard", ChannelType.VOICE, description = "Play custom sound effects in voice")
         )
     ),
-    ToolCategory(
-        icon = "\uD83D\uDCC8",
-        title = "Analytics & Engagement",
+    TreeCategory(
+        name = "ANALYTICS & ENGAGEMENT",
         accentColor = AppColors.AccentChart,
-        tools = listOf(
-            ToolItem("\uD83D\uDCCA", "Server Stats", "Member count, activity graphs, growth"),
-            ToolItem("\uD83C\uDFC6", "Leaderboards", "XP-based ranking with role rewards"),
-            ToolItem("\uD83D\uDC4B", "Welcome System", "Custom welcome messages & DMs"),
-            ToolItem("\uD83D\uDCC5", "Event Scheduler", "Create & RSVP server events")
+        channels = listOf(
+            TreeChannel("server-stats", ChannelType.TEXT, description = "Member count, activity graphs, growth"),
+            TreeChannel("leaderboards", ChannelType.TEXT, description = "XP-based ranking with role rewards"),
+            TreeChannel("welcome-system", ChannelType.ANNOUNCEMENT, description = "Custom welcome messages & DMs"),
+            TreeChannel("event-scheduler", ChannelType.TEXT, description = "Create & RSVP server events")
         )
     ),
-    ToolCategory(
-        icon = "\u2699\uFE0F",
-        title = "Configuration",
+    TreeCategory(
+        name = "CONFIGURATION",
         accentColor = AppColors.AccentGear,
-        tools = listOf(
-            ToolItem("\uD83C\uDFA8", "Embed Builder", "Visual rich embed composer"),
-            ToolItem("\uD83D\uDD10", "Permissions", "Fine-grained command permission editor"),
-            ToolItem("\uD83D\uDCC2", "Channel Router", "Route bot output to specific channels"),
-            ToolItem("\uD83C\uDF19", "Status Rotator", "Cycle bot presence/status messages")
+        channels = listOf(
+            TreeChannel("embed-builder", ChannelType.TEXT, description = "Visual rich embed composer"),
+            TreeChannel("permissions", ChannelType.TEXT, description = "Fine-grained command permission editor"),
+            TreeChannel("channel-router", ChannelType.TEXT, description = "Route bot output to specific channels"),
+            TreeChannel("status-rotator", ChannelType.TEXT, description = "Cycle bot presence/status messages")
         )
     )
 )
+
+// ─── Channel Type → Icon Prefix ───────────────────────────────────────────────
+
+private fun channelIcon(type: ChannelType): String = when (type) {
+    ChannelType.TEXT         -> "#"
+    ChannelType.VOICE        -> "🔊"
+    ChannelType.ANNOUNCEMENT -> "📢"
+    ChannelType.STAGE        -> "📡"
+    ChannelType.FORUM        -> "💬"
+}
+
+// ─── Main Screen ──────────────────────────────────────────────────────────────
 
 @Composable
 fun ToolLibraryScreen(
@@ -135,343 +156,385 @@ fun ToolLibraryScreen(
             .fillMaxSize()
             .background(AppColors.Background)
     ) {
-        Surface(
-            color = AppColors.Surface,
-            tonalElevation = 0.dp,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-            ) {
-                Text(
-                    text = "Tool Library",
-                    color = AppColors.TextPrimary,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.SansSerif
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "Browse and add modules to your bot",
-                    color = AppColors.TextSecondary,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = FontFamily.SansSerif
-                )
-            }
-        }
+        // ── Header ──────────────────────────────────────────────────
+        ServerTreeHeader()
 
+        // ── Search Bar ──────────────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
             Surface(
                 color = AppColors.InputBackground,
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "\uD83D\uDD0D", fontSize = 16.sp)
-                    Spacer(Modifier.width(10.dp))
                     Text(
-                        text = "Search tools\u2026",
+                        text = "🔍",
+                        fontSize = 13.sp,
+                        color = AppColors.TextMuted
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "Search",
                         color = AppColors.TextMuted,
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         fontFamily = FontFamily.SansSerif
                     )
                 }
             }
         }
 
+        // ── Server Tree Body ────────────────────────────────────────
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(bottom = 80.dp)
         ) {
-            FeaturedModuleCard(onToolSelected = onToolSelected)
+            // Featured: Asistente Orión banner (compact)
+            FeaturedOrionBanner(onToolSelected = onToolSelected)
 
             Spacer(Modifier.height(4.dp))
 
-            toolCategories.forEach { category ->
-                ToolCategoryCard(
+            // Tree categories
+            serverTree.forEachIndexed { _, category ->
+                ServerTreeCategorySection(
                     category = category,
-                    onToolSelected = onToolSelected
+                    onChannelSelected = { channelName ->
+                        val toolName = channelName
+                            .replace("-", " ")
+                            .split(" ")
+                            .joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
+                        onToolSelected(
+                            if (channelName == "asistente-orión") "Asistente Orión" else toolName
+                        )
+                    }
                 )
             }
-            Spacer(Modifier.height(80.dp))
         }
     }
 }
 
+// ─── Server Tree Header ───────────────────────────────────────────────────────
+
 @Composable
-private fun FeaturedModuleCard(
-    onToolSelected: (String) -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColors.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+private fun ServerTreeHeader() {
+    Surface(
+        color = AppColors.Surface,
+        tonalElevation = 0.dp,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "\u2B50", fontSize = 14.sp)
-                Spacer(Modifier.width(6.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Grid brand mark
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(AppColors.Primary),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(
-                    text = "FEATURED",
-                    color = AppColors.Warning,
+                    text = "G",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
+
+            Spacer(Modifier.width(10.dp))
+
+            Column {
+                Text(
+                    text = "Grid",
+                    color = AppColors.TextPrimary,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.SansSerif
+                )
+                Text(
+                    text = "Server Tree View",
+                    color = AppColors.TextMuted,
                     fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.SansSerif,
-                    letterSpacing = 1.sp
+                    fontFamily = FontFamily.SansSerif
                 )
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.weight(1f))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(AppColors.Primary.copy(alpha = 0.08f))
-                    .clickable { onToolSelected("Doubt Assistant") }
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+            // Server boost / members indicator
+            Surface(
+                color = AppColors.SurfaceVariant,
+                shape = RoundedCornerShape(4.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(AppColors.Primary.copy(alpha = 0.15f)),
-                    contentAlignment = Alignment.Center
+                Row(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "\uD83D\uDCE1", fontSize = 20.sp)
-                }
-
-                Spacer(Modifier.width(12.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "Doubt Assistant",
-                            color = AppColors.TextPrimary,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            fontFamily = FontFamily.SansSerif
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Surface(
-                            color = AppColors.Success.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(4.dp)
-                        ) {
-                            Text(
-                                text = "NEW",
-                                color = AppColors.Success,
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.5.sp,
-                                modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(3.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(CircleShape)
+                            .background(AppColors.Success)
+                    )
+                    Spacer(Modifier.width(4.dp))
                     Text(
-                        text = "AI-powered assistant for bot setup queries and troubleshooting",
+                        text = "30 tools",
                         color = AppColors.TextSecondary,
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily.SansSerif,
-                        maxLines = 2
-                    )
-                }
-
-                Spacer(Modifier.width(8.dp))
-
-                Surface(
-                    color = AppColors.Primary,
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.clickable { onToolSelected("Doubt Assistant") }
-                ) {
-                    Text(
-                        text = "Open",
-                        color = AppColors.TextPrimary,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily.SansSerif,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ToolCategoryCard(
-    category: ToolCategory,
-    onToolSelected: (String) -> Unit
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    val chevronRotation by animateFloatAsState(
-        targetValue = if (isExpanded) 90f else 0f,
-        animationSpec = tween(durationMillis = 200),
-        label = "chevron"
-    )
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = AppColors.Surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { isExpanded = !isExpanded }
-                    .padding(horizontal = 14.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(category.accentColor.copy(alpha = 0.12f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = category.icon, fontSize = 18.sp)
-                }
-                Spacer(Modifier.width(12.dp))
-                Text(
-                    text = category.title,
-                    color = if (isExpanded) AppColors.Primary else AppColors.TextPrimary,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = FontFamily.SansSerif,
-                    modifier = Modifier.weight(1f)
-                )
-                Surface(
-                    color = AppColors.SurfaceVariant,
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "${category.tools.size}",
-                        color = AppColors.TextMuted,
-                        fontSize = 11.sp,
+                        fontSize = 10.sp,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        fontFamily = FontFamily.SansSerif
                     )
-                }
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "\u203A",
-                    color = if (isExpanded) AppColors.Primary else AppColors.TextMuted,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.rotate(chevronRotation)
-                )
-            }
-            AnimatedVisibility(
-                visible = isExpanded,
-                enter = expandVertically(animationSpec = tween(200)) + fadeIn(),
-                exit = shrinkVertically(animationSpec = tween(200)) + fadeOut()
-            ) {
-                Column {
-                    HorizontalDivider(
-                        color = AppColors.Divider,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(horizontal = 14.dp)
-                    )
-                    category.tools.forEach { tool ->
-                        ToolItemRow(
-                            tool = tool,
-                            accentColor = category.accentColor,
-                            onClick = { onToolSelected(tool.name) }
-                        )
-                    }
-                    Spacer(Modifier.height(6.dp))
                 }
             }
         }
     }
+
+    // Thin divider under header
+    HorizontalDivider(color = AppColors.Divider, thickness = 1.dp)
 }
 
+// ─── Featured Orión Banner (Compact) ──────────────────────────────────────────
+
 @Composable
-private fun ToolItemRow(
-    tool: ToolItem,
-    accentColor: Color,
-    onClick: () -> Unit
+private fun FeaturedOrionBanner(
+    onToolSelected: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 10.dp),
+            .clickable { onToolSelected("Asistente Orión") }
+            .background(AppColors.Primary.copy(alpha = 0.06f))
+            .padding(horizontal = 14.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = tool.icon, fontSize = 20.sp)
-        Spacer(Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = tool.name,
-                    color = AppColors.TextPrimary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontFamily = FontFamily.SansSerif,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (tool.isPremium) {
-                    Spacer(Modifier.width(6.dp))
-                    Surface(
-                        color = AppColors.Warning.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(4.dp)
-                    ) {
-                        Text(
-                            text = "PRO",
-                            color = AppColors.Warning,
-                            fontSize = 9.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp,
-                            modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
-                        )
-                    }
-                }
-            }
-            Spacer(Modifier.height(2.dp))
+        Text(text = "📡", fontSize = 14.sp)
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = "Asistente Orión",
+            color = AppColors.Primary,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontFamily = FontFamily.SansSerif,
+            modifier = Modifier.weight(1f)
+        )
+        Surface(
+            color = AppColors.Success.copy(alpha = 0.15f),
+            shape = RoundedCornerShape(3.dp)
+        ) {
             Text(
-                text = tool.description,
-                color = AppColors.TextMuted,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.SansSerif,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = "NEW",
+                color = AppColors.Success,
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp,
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
             )
         }
         Spacer(Modifier.width(8.dp))
-        Surface(
-            color = AppColors.Primary.copy(alpha = 0.12f),
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier.clickable(onClick = onClick)
+        Text(
+            text = "›",
+            color = AppColors.Primary,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+// ─── Tree Category Section (Collapsible) ──────────────────────────────────────
+
+@Composable
+private fun ServerTreeCategorySection(
+    category: TreeCategory,
+    onChannelSelected: (String) -> Unit
+) {
+    var isExpanded by remember { mutableStateOf(true) }
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (isExpanded) 90f else 0f,
+        animationSpec = tween(durationMillis = 150),
+        label = "chevron"
+    )
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // ── Category header row ──────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { isExpanded = !isExpanded }
+                .padding(start = 6.dp, end = 14.dp, top = 12.dp, bottom = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            // Collapse chevron (small triangle)
             Text(
-                text = "+ Add",
-                color = AppColors.Primary,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
+                text = "▸",
+                color = AppColors.TextMuted,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .rotate(chevronRotation)
+                    .padding(start = 4.dp)
+            )
+            Spacer(Modifier.width(4.dp))
+            Text(
+                text = category.name,
+                color = AppColors.TextMuted,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.SansSerif,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                letterSpacing = 0.6.sp,
+                modifier = Modifier.weight(1f)
             )
         }
+
+        // ── Channels (with branch lines) ─────────────────────────────
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = expandVertically(animationSpec = tween(150)) + fadeIn(tween(150)),
+            exit = shrinkVertically(animationSpec = tween(150)) + fadeOut(tween(150))
+        ) {
+            Column {
+                category.channels.forEachIndexed { index, channel ->
+                    val isLast = index == category.channels.lastIndex
+                    TreeChannelRow(
+                        channel = channel,
+                        accentColor = category.accentColor,
+                        isLast = isLast,
+                        onClick = { onChannelSelected(channel.name) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ─── Tree Channel Row (with vertical + horizontal branch lines) ───────────────
+
+@Composable
+private fun TreeChannelRow(
+    channel: TreeChannel,
+    accentColor: Color,
+    isLast: Boolean,
+    onClick: () -> Unit
+) {
+    val branchColor = AppColors.SurfaceBorder
+    val lineWidth = 16.dp
+    val lineLeft = 18.dp
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(start = 0.dp, end = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // ── Branch line drawing area ──────────────────────────
+        Box(
+            modifier = Modifier
+                .width(lineLeft + lineWidth)
+                .height(30.dp)
+        ) {
+            Canvas(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                val leftX = lineLeft.toPx()
+                val midY = size.height / 2f
+                val lineColor = branchColor
+
+                // Vertical line: from top to mid (or full height if not last)
+                drawLine(
+                    color = lineColor,
+                    start = Offset(leftX, 0f),
+                    end = Offset(leftX, if (isLast) midY else size.height),
+                    strokeWidth = 1.5f
+                )
+
+                // Horizontal branch: from vertical line to channel icon
+                drawLine(
+                    color = lineColor,
+                    start = Offset(leftX, midY),
+                    end = Offset(leftX + lineWidth.toPx() - 4.dp.toPx(), midY),
+                    strokeWidth = 1.5f
+                )
+            }
+        }
+
+        // ── Channel icon ──────────────────────────────────────
+        val iconText = channelIcon(channel.nodeType)
+        val isHashIcon = channel.nodeType == ChannelType.TEXT
+
+        if (isHashIcon) {
+            Text(
+                text = iconText,
+                color = AppColors.TextMuted,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
+                modifier = Modifier.width(18.dp)
+            )
+        } else {
+            Text(
+                text = iconText,
+                fontSize = 13.sp,
+                modifier = Modifier.width(18.dp)
+            )
+        }
+
+        Spacer(Modifier.width(4.dp))
+
+        // ── Channel name ──────────────────────────────────────
+        Text(
+            text = channel.name,
+            color = AppColors.TextSecondary,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            fontFamily = FontFamily.SansSerif,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+
+        // ── PRO badge ─────────────────────────────────────────
+        if (channel.isPremium) {
+            Surface(
+                color = AppColors.Warning.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(3.dp)
+            ) {
+                Text(
+                    text = "PRO",
+                    color = AppColors.Warning,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp,
+                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                )
+            }
+            Spacer(Modifier.width(4.dp))
+        }
+
+        // ── Add action (appears on hover/tap area — always shown for mobile) ──
+        Text(
+            text = "+",
+            color = AppColors.TextMuted,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.SansSerif,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(onClick = onClick)
+                .padding(horizontal = 6.dp, vertical = 2.dp)
+        )
     }
 }
