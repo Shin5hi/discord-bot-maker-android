@@ -1,0 +1,18 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#030712"/><stop offset="0.55" stop-color="#091225"/><stop offset="1" stop-color="#050812"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#5865F2"/><stop offset="1" stop-color="#22D3EE"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="58" y="48" width="1484" height="804" rx="36" fill="none" stroke="#1D2B4A"/>
+  <text x="104" y="118" fill="#8EA9FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="800">PUBLIC BRAND DECK</text>
+  <text x="104" y="212" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="92" font-weight="850">Discord Bot Maker</text>
+  <text x="106" y="270" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="30">Build and run your bot from your phone.</text>
+  <rect x="106" y="306" width="520" height="5" rx="3" fill="url(#line)"/>
+  <image href="../profile-mark.png" x="138" y="344" width="840" height="472" preserveAspectRatio="xMidYMid meet"/>
+  <text x="1110" y="474" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="800">Dark technical.</text>
+  <text x="1110" y="536" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="800">Friendly bot.</text>
+  <text x="1110" y="598" fill="#22D3EE" font-family="Consolas, monospace" font-size="42" font-weight="700">&gt;_ terminal soul.</text>
+</svg>

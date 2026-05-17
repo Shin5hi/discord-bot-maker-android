@@ -1,0 +1,19 @@
+{
+  "name": "discord-5iv-ai-team",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Equipo de 4 IAs para gestionar un servidor privado de Discord de Shin5hi / 5iV.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js && node --check src/config.js && node --check src/gemini.js && node --check src/session.js && node --check src/storage.js && node --check src/adminPlanner.js && node --check src/discordAdmin.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.5.0"
+  }
+}

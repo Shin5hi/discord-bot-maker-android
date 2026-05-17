@@ -34,9 +34,26 @@ To ensure we move fast without conflicts, here is the suggested split of respons
 
 ## 📋 Task Backlog
 - [Grid] Custom Command Builder Screen (Android)
-- [Codex] Token encryption/decryption logic (Backend)
+- [COMPLETED][Codex] Token encryption/decryption logic (Backend)
 - [Grid] Navigation Graph Setup (Android)
 - [Codex] Bot Runtime Containerization (DevOps)
+
+## ✅ Codex Update
+- Backend refactored away from Redis into FastAPI + SQLite + encrypted token storage.
+- REST endpoints for bot register/start/stop and AutoMod are live.
+- WebSocket log streaming works with automated backend tests.
+- Android project is now a real Gradle/Compose app with navigation, first-run bot setup, bot home, console, and AutoMod flows wired to the backend contracts.
+- Android visual pass is aligned to a Discord-inspired dark palette and interaction model instead of the earlier neon prototype.
+- Codex plugin stack for the repo is now documented in `PLUGIN_STACK.md`.
+- Default operational stack:
+  - `GitHub` for repo-aware work
+  - `Superpowers` for complex planning and debugging
+  - `CodeRabbit` for risky-change review
+  - `Test Android Apps` for visible Android verification
+- Verification completed on 2026-04-21:
+  - `pytest backend/tests/test_api.py -q` → 5 passed
+  - `gradlew :app:testDebugUnitTest` → passing
+  - `gradlew :app:assembleDebug` → debug APK generated at `app/build/outputs/apk/debug/app-debug.apk`
 
 ---
 

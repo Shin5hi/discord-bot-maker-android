@@ -1,141 +1,252 @@
-<div align="center">
+<p align="center">
+  <img src="docs/branding/logo-lockup.svg" alt="Discord Bot Maker logo lockup">
+</p>
 
-# 🤖 Discord Bot Maker for Android
+<p align="center">
+  <a href="https://github.com/Shin5hi/discord-bot-maker-android/actions/workflows/ci.yml">
+    <img src="https://github.com/Shin5hi/discord-bot-maker-android/actions/workflows/ci.yml/badge.svg" alt="CI status">
+  </a>
+</p>
 
-**Build, deploy, and manage Discord bots — straight from your phone.**
+<p align="center">
+  <img src="docs/branding/readme-preview.svg" alt="Discord Bot Maker visual preview">
+</p>
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.0-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org)
-[![Compose Multiplatform](https://img.shields.io/badge/Compose_Multiplatform-1.7-4285F4?logo=jetpackcompose&logoColor=white)](https://www.jetbrains.com/lp/compose-multiplatform/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Redis](https://img.shields.io/badge/Redis-7.4-DC382D?logo=redis&logoColor=white)](https://redis.io)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<p align="center">
+  <img src="docs/branding/brand-presentation.svg" alt="Discord Bot Maker branding presentation">
+</p>
 
-</div>
+## At a Glance
 
----
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <strong>Register</strong>
+      <br>
+      Save one bot name and token with local encryption.
+    </td>
+    <td align="center" width="25%">
+      <strong>Start</strong>
+      <br>
+      Run the bot from the FastAPI backend without leaving the app.
+    </td>
+    <td align="center" width="25%">
+      <strong>Watch</strong>
+      <br>
+      Stream runtime logs to the phone over WebSocket.
+    </td>
+    <td align="center" width="25%">
+      <strong>Moderate</strong>
+      <br>
+      Load and save AutoMod settings from Android.
+    </td>
+  </tr>
+</table>
 
-## 🎯 Mission
+## Visual Direction
 
-Discord Bot Maker for Android eliminates the need for a desktop setup to build and manage Discord bots. Whether you're commuting, on break, or away from your workstation — you have full control over your bot's behavior, moderation rules, and real-time logs right from your Android device.
+Discord Bot Maker uses a Discord-inspired dark interface with blurple primary actions, charcoal surfaces, cyan runtime accents, and compact Android-first screens. The profile mark is intentionally rounded so it works as a repo avatar, app placeholder, or social preview asset, and the main README lockup now matches the final project face.
 
-We believe bot development should be **accessible, mobile-first, and visually satisfying**.
+| Token | Color | Usage |
+| --- | --- | --- |
+| Blurple | `#5865F2` | Primary actions, selected states, bot identity |
+| Cyan | `#31D0FF` | Runtime status, console highlights, active signals |
+| Charcoal | `#171A21` | App surfaces and cards |
+| Ink | `#0F1117` | Backgrounds |
+| White | `#F5F7FF` | Primary text |
 
----
+## Product Flow
 
-## 🏗️ Tech Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Frontend** | Kotlin Multiplatform + Jetpack Compose | Cross-platform UI with a neon/hacker aesthetic |
-| **Backend** | FastAPI (Python) | REST + WebSocket API for bot orchestration |
-| **Cache / PubSub** | Redis 7.4 | Real-time log streaming, session state, rate limiting |
-| **AI Moderation** | Google Gemini API | Toxicity detection for AutoMod filters |
-| **Bot Runtime** | discord.py / Pycord | Discord gateway connection and event handling |
-
----
-
-## ✨ Key Features
-
-- **📟 Live Console** — Real-time, neon-styled terminal that streams bot logs over WebSocket. Auto-scroll, color-coded severity levels, and a true hacker vibe.
-- **🛡️ AI AutoMod** — Configure AI-powered toxicity filtering (Gemini), link blocking, and spam protection with intuitive sliders and switches.
-- **⚡ Instant Deploy** — Push bot configuration changes from your phone and see them take effect in seconds.
-- **🔌 WebSocket Streaming** — Low-latency, bidirectional communication between the Android client and the FastAPI backend via Redis Pub/Sub.
-- **🎨 Dark Neon UI** — A carefully crafted dark theme with neon green, cyan, and magenta accents across every screen.
-
----
-
-## 📂 Project Structure
-
+```text
+Android app
+   |
+   | register bot / edit AutoMod / start runtime
+   v
+FastAPI backend
+   |
+   | encrypt token + persist state
+   v
+SQLite + local key
+   |
+   | launch bot + emit events
+   v
+Discord runtime
+   |
+   | stream live logs
+   v
+Phone console
 ```
+
+## Experience Pillars
+
+| Surface | What the user feels |
+| --- | --- |
+| Android app | Clear, compact controls focused on one bot at a time |
+| Backend | Local-first control plane that starts and stops the runtime |
+| Console | Immediate feedback instead of guessing whether the bot is alive |
+| AutoMod | Fast tuning of moderation behavior without touching code |
+
+## MVP Scope
+
+- Android app built with Jetpack Compose
+- FastAPI backend with SQLite persistence
+- Single-bot runtime managed by the backend
+- Token storage encrypted with a local secret key
+- Live log streaming over WebSocket
+- AutoMod configuration save/load
+
+Out of scope for this first hito:
+
+- Kotlin Multiplatform
+- Redis
+- Hugging Face / Gemini moderation
+- Telegram product integration
+- Multi-user or multi-bot support
+- Music module and slash-command builder
+
+## Project Structure
+
+```text
 discord-bot-maker-android/
-├── README.md                    # You are here
+├── COORDINATION.md
+├── README.md
 ├── app/
-│   └── src/main/kotlin/
-│       ├── LiveConsoleScreen.kt # Real-time log terminal UI
-│       └── AutoModScreen.kt    # AI moderation config screen
+│   ├── build.gradle.kts
+│   └── src/
+│       ├── main/
+│       │   ├── AndroidManifest.xml
+│       │   ├── kotlin/com/discordbotmaker/android/
+│       │   │   ├── MainActivity.kt
+│       │   │   ├── app/
+│       │   │   ├── data/
+│       │   │   ├── feature/
+│       │   │   └── ui/
+│       │   └── res/
+│       └── test/
 ├── backend/
-│   └── backend_api.py          # FastAPI WebSocket + Redis integration
-├── gradle/
+│   ├── app/
+│   │   ├── logging.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── runtime.py
+│   │   ├── security.py
+│   │   └── storage.py
+│   ├── tests/
+│   ├── backend_api.py
+│   └── pyproject.toml
 ├── build.gradle.kts
+├── gradle.properties
+├── gradlew
+├── gradlew.bat
 └── settings.gradle.kts
 ```
 
----
+## Backend
 
-## 🚀 Getting Started
+### What it does
 
-### Prerequisites
+- `POST /api/bot` registers or updates the single bot
+- `GET /api/bot` returns current bot state
+- `POST /api/bot/start` starts the in-process bot runtime
+- `POST /api/bot/stop` stops it
+- `GET /api/automod` loads AutoMod
+- `PUT /api/automod` saves AutoMod
+- `GET /ws/logs` streams live log entries
 
-- Android Studio Hedgehog (2024.1) or later
-- Python 3.11+
-- Redis 7.x running locally or via Docker
-- A Discord Bot Token ([Discord Developer Portal](https://discord.com/developers/applications))
-- Google Gemini API Key (for AI moderation)
+### Run locally
 
-### Backend Setup
-
-```bash
-# Clone the repo
-git clone https://github.com/Shin5hi/discord-bot-maker-android.git
-cd discord-bot-maker-android/backend
-
-# Create virtual environment
-python -m venv .venv && source .venv/bin/activate
-
-# Install dependencies
-pip install fastapi uvicorn redis aioredis websockets pydantic
-
-# Start Redis (Docker)
-docker run -d --name redis-dbm -p 6379:6379 redis:7.4-alpine
-
-# Run the backend
-uvicorn backend_api:app --host 0.0.0.0 --port 8000 --reload
+```powershell
+cd backend
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install --upgrade pip
+.venv\Scripts\python.exe -m pip install .
+.venv\Scripts\uvicorn.exe backend_api:app --reload
 ```
 
-### Android App
+Backend data is stored under `backend/.data/`:
 
-1. Open the project root in Android Studio.
-2. Sync Gradle and let dependencies resolve.
-3. Update `local.properties` with your backend URL:
-   ```properties
-   BACKEND_WS_URL=ws://YOUR_SERVER_IP:8000/ws/logs
-   BACKEND_API_URL=http://YOUR_SERVER_IP:8000
-   ```
-4. Build and run on your device or emulator.
+- `discord_bot_maker.db` for SQLite
+- `token.key` for local token encryption
 
----
+## Android App
 
-## 🔧 Configuration
+### What it does
 
-| Environment Variable | Description | Default |
-|---------------------|-------------|---------|
-| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
-| `DISCORD_BOT_TOKEN` | Your Discord bot token | — |
-| `GEMINI_API_KEY` | Google Gemini API key for toxicity analysis | — |
-| `LOG_CHANNEL` | Redis Pub/Sub channel for log streaming | `bot:logs` |
+- Stores the backend base URL locally
+- Registers the bot with name + token
+- Shows bot status and start/stop controls
+- Opens the live console
+- Loads and saves AutoMod
 
----
+### Run locally
 
-## 🤝 Contributing
+```powershell
+.\gradlew.bat -p E:\Users\aph97\discord-bot-maker-android :app:assembleDebug
+```
 
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a PR.
+Or open the project root in Android Studio and run the `app` module.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/awesome-feature`)
-3. Commit your changes (`git commit -m 'Add awesome feature'`)
-4. Push to the branch (`git push origin feature/awesome-feature`)
-5. Open a Pull Request
+### Run from Android Studio
 
----
+1. Open `E:\Users\aph97\discord-bot-maker-android`
+2. Wait for Gradle sync to finish
+3. Start the backend locally
+4. Run the `app` configuration on an emulator or device
+5. In the app, use:
+   - `http://10.0.2.2:8000` for the Android emulator
+   - `http://<your-pc-lan-ip>:8000` for a physical Android phone
 
-## 📄 License
+## Verification
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+Backend tests:
 
----
+```powershell
+backend\.venv\Scripts\python.exe -m pytest backend\tests\test_api.py -q
+```
 
-<div align="center">
+Android JVM tests:
 
-**Built with 💚 for mobile-first bot developers.**
+```powershell
+.\gradlew.bat -p E:\Users\aph97\discord-bot-maker-android :app:testDebugUnitTest
+```
 
-</div>
+CI workflow:
+
+- GitHub Actions runs backend tests, Android JVM unit tests, and `assembleDebug` on PRs and pushes to `main`
+- Workflow file: [.github/workflows/ci.yml](/E:/Users/aph97/discord-bot-maker-android/.github/workflows/ci.yml)
+
+## Play Store Path
+
+The project is intended to be published on Google Play after the MVP is stable. Play Store work is deliberately treated as a release phase, not part of the first local MVP loop.
+
+Before publishing:
+
+- the Android app must pass local and CI builds
+- the main phone flows must be tested on a real device or emulator
+- the app needs a signed release build, store listing assets, privacy policy, data safety answers, and final branding screenshots
+- backend connection expectations must be clear because the app controls a locally or externally hosted FastAPI server
+
+Publishing readiness is tracked in [RELEASE_CHECKLIST.md](/E:/Users/aph97/discord-bot-maker-android/RELEASE_CHECKLIST.md).
+
+## Codex Plugin Workflow
+
+The repo keeps a minimal Codex plugin stack for day-to-day work. See [PLUGIN_STACK.md](/E:/Users/aph97/discord-bot-maker-android/PLUGIN_STACK.md).
+
+Default stack:
+
+- `GitHub` for repo-aware development
+- `CodeRabbit` for review of risky changes
+- `Superpowers` for structuring complex work and debugging
+- `Test Android Apps` for validating visible Android behavior
+
+Second-wave plugins such as `Linear`, `Slack`, or `Sentry` stay optional and are only adopted when the repo actually needs them.
+
+Contribution and PR expectations are documented in [CONTRIBUTING.md](/E:/Users/aph97/discord-bot-maker-android/CONTRIBUTING.md).
+Security handling is documented in [SECURITY.md](/E:/Users/aph97/discord-bot-maker-android/SECURITY.md).
+Pre-release validation is documented in [RELEASE_CHECKLIST.md](/E:/Users/aph97/discord-bot-maker-android/RELEASE_CHECKLIST.md).
+
+## Notes
+
+- The backend runtime uses `discord.py` in-process.
+- A valid Discord bot token is still created beforehand in the Discord Developer Portal.
+- The Android app now uses a Discord-inspired dark UI with official blurple branding cues and darker charcoal surfaces.

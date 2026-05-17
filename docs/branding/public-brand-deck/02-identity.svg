@@ -1,0 +1,26 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#050812"/><stop offset="1" stop-color="#0A1224"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset="1" stop-color="#0A101D"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="96" y="112" fill="#8EA9FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="800">IDENTITY</text>
+  <text x="96" y="196" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="78" font-weight="850">A bot builder that feels alive.</text>
+  <text x="98" y="254" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="28">The brand should make command-line control feel approachable on Android.</text>
+  <rect x="96" y="334" width="420" height="320" rx="28" fill="url(#panel)" stroke="#294269"/>
+  <text x="136" y="402" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="800">Friendly</text>
+  <text x="136" y="462" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">Rounded shell, soft glow and</text>
+  <text x="136" y="500" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">a mascot silhouette built for</text>
+  <text x="136" y="538" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">quick recognition.</text>
+  <rect x="590" y="334" width="420" height="320" rx="28" fill="url(#panel)" stroke="#294269"/>
+  <text x="630" y="402" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="800">Technical</text>
+  <text x="630" y="462" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">The &gt;_ face anchors the bot</text>
+  <text x="630" y="500" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">in terminal culture without</text>
+  <text x="630" y="538" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">making it intimidating.</text>
+  <rect x="1084" y="334" width="420" height="320" rx="28" fill="url(#panel)" stroke="#294269"/>
+  <text x="1124" y="402" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="800">Mobile-first</text>
+  <text x="1124" y="462" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">Compact surfaces, clear actions</text>
+  <text x="1124" y="500" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">and Android green as a small</text>
+  <text x="1124" y="538" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="25">platform cue.</text>
+  <image href="../profile-mark.png" x="380" y="610" width="840" height="260" preserveAspectRatio="xMidYMid meet"/>
+</svg>

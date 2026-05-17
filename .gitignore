@@ -1,0 +1,16 @@
+.gradle/
+.gradle-user-home/
+.kotlin/
+node_modules/
+build/
+local.properties
+backend/.venv/
+backend/.pytest_cache/
+backend/.pytest_tmp/
+/.pytest_tmp/
+backend/__pycache__/
+backend/tests/__pycache__/
+backend/.data/
+backend/*.log
+*.pyc
+app/build/

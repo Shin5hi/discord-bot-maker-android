@@ -1,0 +1,16 @@
+# Default owner
+* @Shin5hi
+
+# Android app
+/app/ @Shin5hi
+
+# Backend
+/backend/ @Shin5hi
+
+# Docs and repo workflow
+/README.md @Shin5hi
+/ARCHITECTURE.md @Shin5hi
+/PLUGIN_STACK.md @Shin5hi
+/CONTRIBUTING.md @Shin5hi
+/COORDINATION.md @Shin5hi
+/.github/ @Shin5hi

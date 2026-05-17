@@ -1,0 +1,34 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shell" x1="206" y1="180" x2="588" y2="642" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9FB0FF"/>
+      <stop offset="0.44" stop-color="#6576FF"/>
+      <stop offset="1" stop-color="#4656F4"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="184" y1="192" x2="502" y2="584" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7E0FF"/>
+      <stop offset="0.34" stop-color="#93A4FF"/>
+      <stop offset="1" stop-color="#4B5CFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="274" y1="454" x2="462" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#29F0E2"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <filter id="shadow" x="-60" y="-40" width="900" height="860" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="28" stdDeviation="34" flood-color="#000915" flood-opacity="0.48"/>
+    </filter>
+    <g id="mark">
+      <path d="M252 270 L216 202" stroke="url(#shell)" stroke-width="41" stroke-linecap="round"/>
+      <path d="M482 270 L518 202" stroke="url(#shell)" stroke-width="41" stroke-linecap="round"/>
+      <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" fill="url(#shell)"/>
+      <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" stroke="url(#edge)" stroke-width="3" opacity="0.75"/>
+      <path d="M193 488 C193 412 249 384 336 384 L398 384 C485 384 541 412 541 488 L541 512 C541 586 486 600 398 600 L336 600 C248 600 193 586 193 512 Z" fill="#050A15"/>
+      <path d="M263 454 L326 502 L263 550" stroke="url(#accent)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M359 525 L411 525" stroke="#22D3EE" stroke-width="25" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect x="34" y="34" width="956" height="956" rx="250" fill="#FFFFFF"/>
+  <g filter="url(#shadow)" transform="translate(-152 -195) scale(1.81)">
+    <use href="#mark"/>
+  </g>
+</svg>

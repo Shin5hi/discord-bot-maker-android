@@ -1,0 +1,80 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgField" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#060B17"/>
+      <stop offset="0.54" stop-color="#08101D"/>
+      <stop offset="1" stop-color="#030712"/>
+    </linearGradient>
+    <linearGradient id="botShell" x1="208" y1="178" x2="590" y2="642" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9FB0FF"/>
+      <stop offset="0.44" stop-color="#6576FF"/>
+      <stop offset="1" stop-color="#4656F4"/>
+    </linearGradient>
+    <linearGradient id="botEdge" x1="184" y1="192" x2="502" y2="584" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7E0FF"/>
+      <stop offset="0.34" stop-color="#93A4FF"/>
+      <stop offset="1" stop-color="#4B5CFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="botAccent" x1="274" y1="454" x2="462" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#29F0E2"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="wordBlue" x1="674" y1="310" x2="944" y2="498" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#5865F2"/>
+    </linearGradient>
+    <linearGradient id="underline" x1="682" y1="520" x2="836" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5865F2"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <filter id="softShadow" x="88" y="112" width="560" height="548" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="26" flood-color="#000000" flood-opacity="0.52"/>
+    </filter>
+    <filter id="blueGlow" x="146" y="655" width="384" height="82" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="coreGlow" x="222" y="675" width="232" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="textShadow" x="640" y="136" width="856" height="382" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#000000" flood-opacity="0.34"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bgField)"/>
+
+  <ellipse cx="367" cy="697" rx="164" ry="20" fill="#2563FF" opacity="0.42" filter="url(#blueGlow)"/>
+  <ellipse cx="367" cy="697" rx="86" ry="10" fill="#9BE7FF" opacity="0.92" filter="url(#coreGlow)"/>
+
+  <g filter="url(#softShadow)">
+    <path d="M252 270 L216 202" stroke="url(#botShell)" stroke-width="41" stroke-linecap="round"/>
+    <path d="M482 270 L518 202" stroke="url(#botShell)" stroke-width="41" stroke-linecap="round"/>
+    <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" fill="url(#botShell)"/>
+    <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" stroke="url(#botEdge)" stroke-width="3" opacity="0.75"/>
+    <path d="M193 488 C193 412 249 384 336 384 L398 384 C485 384 541 412 541 488 L541 512 C541 586 486 600 398 600 L336 600 C248 600 193 586 193 512 Z" fill="#050A15"/>
+    <path d="M263 454 L326 502 L263 550" stroke="url(#botAccent)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M359 525 L411 525" stroke="#22D3EE" stroke-width="25" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#textShadow)" font-family="Segoe UI, Arial, sans-serif" font-weight="800">
+    <text x="674" y="286" fill="#FFFFFF" font-size="134">Discord</text>
+    <text x="674" y="448" fill="url(#wordBlue)" font-size="134">Bot</text>
+    <text x="974" y="448" fill="#FFFFFF" font-size="134">Maker</text>
+  </g>
+  <rect x="675" y="492" width="146" height="12" rx="6" fill="url(#underline)"/>
+  <text x="674" y="574" fill="#B8BECC" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="400">Build and run your bot from your phone</text>
+
+  <rect x="666" y="626" width="392" height="88" rx="44" fill="#080C15" fill-opacity="0.42" stroke="#343A4A" stroke-width="2"/>
+  <g transform="translate(716 646) scale(0.98)">
+    <path d="M20 10 L15 2" stroke="#9EEB25" stroke-width="3" stroke-linecap="round"/>
+    <path d="M36 10 L41 2" stroke="#9EEB25" stroke-width="3" stroke-linecap="round"/>
+    <path d="M13 26 C13 14 20 8 28 8 C36 8 43 14 43 26 L43 42 L13 42 Z" fill="#9EEB25"/>
+    <rect x="7" y="25" width="5" height="22" rx="2.5" fill="#9EEB25"/>
+    <rect x="44" y="25" width="5" height="22" rx="2.5" fill="#9EEB25"/>
+    <rect x="18" y="42" width="5" height="13" rx="2.5" fill="#9EEB25"/>
+    <rect x="33" y="42" width="5" height="13" rx="2.5" fill="#9EEB25"/>
+    <circle cx="23" cy="22" r="2" fill="#050A15"/>
+    <circle cx="33" cy="22" r="2" fill="#050A15"/>
+  </g>
+  <text x="782" y="682" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="500">Made for Android</text>
+</svg>

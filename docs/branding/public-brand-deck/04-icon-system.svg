@@ -1,0 +1,15 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#1E1F22"/><stop offset="1" stop-color="#2B2D31"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="96" y="112" fill="#8EA9FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="800">ICON SYSTEM</text>
+  <text x="96" y="194" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="76" font-weight="850">Built for Android masks.</text>
+  <text x="98" y="250" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="28">The icon keeps the same personality in circular and rounded-square contexts.</text>
+  <rect x="132" y="316" width="598" height="486" rx="34" fill="#202226" stroke="#3A3D46"/>
+  <rect x="870" y="316" width="598" height="486" rx="34" fill="#202226" stroke="#3A3D46"/>
+  <text x="186" y="382" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">CIRCULAR MASK</text>
+  <text x="924" y="382" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">ROUNDED SQUARE</text>
+  <image href="../app-icon-circle.svg" x="258" y="438" width="346" height="346" preserveAspectRatio="xMidYMid meet"/>
+  <image href="../app-icon-square.svg" x="996" y="438" width="346" height="346" preserveAspectRatio="xMidYMid meet"/>
+</svg>

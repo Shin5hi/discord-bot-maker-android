@@ -1,480 +1,295 @@
 package com.discordbotmaker.android.ui.automod
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.discordbotmaker.android.ui.theme.DiscordPalette
 import kotlin.math.roundToInt
-
-// ─── Dark / Neon Color Palette (shared with LiveConsoleScreen) ━━━━━━━━━━━━━━━
-
-private object NeonTheme {
-    val Background       = Color(0xFF0A0A0F)
-    val SurfaceCard      = Color(0xFF12121C)
-    val SurfaceBorder    = Color(0xFF1E1E2E)
-    val NeonGreen        = Color(0xFF00FF41)
-    val NeonCyan         = Color(0xFF00E5FF)
-    val NeonMagenta      = Color(0xFFFF00FF)
-    val NeonAmber        = Color(0xFFFFD600)
-    val NeonRed          = Color(0xFFFF1744)
-    val TextPrimary      = Color(0xFFE0E0E0)
-    val TextSecondary    = Color(0xFF9E9E9E)
-    val TextDim          = Color(0xFF616161)
-    val SwitchTrackOff   = Color(0xFF2A2A3A)
-    val SliderInactive   = Color(0xFF1A1A2A)
-}
-
-// ─── AutoMod Configuration State ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 data class AutoModConfig(
     val toxicityFilterEnabled: Boolean = false,
-    val toxicitySensitivity: Float = 0.7f,       // 0.0 – 1.0
+    val toxicitySensitivity: Float = 0.7f,
     val toxicityAction: ToxicityAction = ToxicityAction.DELETE,
     val linkBlockingEnabled: Boolean = false,
     val allowWhitelistedLinks: Boolean = true,
     val spamProtectionEnabled: Boolean = false,
-    val spamMessageThreshold: Int = 5,            // messages per window
+    val spamMessageThreshold: Int = 5,
     val spamWindowSeconds: Int = 10,
-    val spamMuteDurationMinutes: Int = 5
+    val spamMuteDurationMinutes: Int = 5,
 )
 
-enum class ToxicityAction(val label: String, val icon: String) {
-    WARN("Warn", "⚠"),
-    DELETE("Delete", "🗑"),
-    MUTE("Mute", "🔇"),
-    BAN("Ban", "🚫")
+enum class ToxicityAction(val label: String) {
+    WARN("Warn"),
+    DELETE("Delete"),
+    MUTE("Mute"),
+    BAN("Ban"),
 }
-
-// ─── AutoMod Screen ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 fun AutoModScreen(
     config: AutoModConfig = AutoModConfig(),
-    onConfigChanged: (AutoModConfig) -> Unit = {}
+    onDraftChanged: (AutoModConfig) -> Unit = {},
+    onDeploy: (AutoModConfig) -> Unit = {},
 ) {
-    var state by remember { mutableStateOf(config) }
+    var state by remember(config) { mutableStateOf(config) }
 
-    // Propagate changes upward
     fun update(block: AutoModConfig.() -> AutoModConfig) {
         state = state.block()
-        onConfigChanged(state)
+        onDraftChanged(state)
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeonTheme.Background)
+            .background(DiscordPalette.Background)
             .verticalScroll(rememberScrollState())
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        // ── Header ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        ScreenHeader()
-
-        Spacer(Modifier.height(16.dp))
-
-        // ── 1. AI Toxicity Filter (Gemini) ━━━━━━━━━━━━━━
-        ModCard(
-            title = "AI Toxicity Filter",
-            subtitle = "Powered by Google Gemini",
-            icon = "🧠",
-            accentColor = NeonTheme.NeonMagenta,
-            enabled = state.toxicityFilterEnabled,
-            onToggle = { update { copy(toxicityFilterEnabled = it) } }
+        Surface(
+            color = DiscordPalette.SurfaceBright,
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            AnimatedVisibility(
-                visible = state.toxicityFilterEnabled,
-                enter = expandVertically(),
-                exit = shrinkVertically()
+            Column(
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Column(modifier = Modifier.padding(top = 12.dp)) {
-                    // Sensitivity slider
-                    LabeledSlider(
-                        label = "Sensitivity",
-                        value = state.toxicitySensitivity,
-                        valueLabel = "${(state.toxicitySensitivity * 100).roundToInt()}%",
-                        accentColor = NeonTheme.NeonMagenta,
-                        onValueChange = { update { copy(toxicitySensitivity = it) } }
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    // Action selector
-                    Text(
-                        text = "ACTION ON VIOLATION",
-                        color = NeonTheme.TextSecondary,
-                        fontSize = 10.sp,
-                        fontFamily = FontFamily.Monospace,
-                        letterSpacing = 1.sp
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ToxicityAction.entries.forEach { action ->
-                            ActionChip(
-                                action = action,
-                                selected = state.toxicityAction == action,
-                                accentColor = NeonTheme.NeonMagenta,
-                                onClick = { update { copy(toxicityAction = action) } }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // ── 2. Link Blocking ━━━━━━━━━━━━━━━━━━━━
-        ModCard(
-            title = "Link Blocking",
-            subtitle = "Block unauthorized URLs in messages",
-            icon = "🔗",
-            accentColor = NeonTheme.NeonAmber,
-            enabled = state.linkBlockingEnabled,
-            onToggle = { update { copy(linkBlockingEnabled = it) } }
-        ) {
-            AnimatedVisibility(
-                visible = state.linkBlockingEnabled,
-                enter = expandVertically(),
-                exit = shrinkVertically()
-            ) {
-                Column(modifier = Modifier.padding(top = 12.dp)) {
-                    NeonSwitchRow(
-                        label = "Allow whitelisted domains",
-                        checked = state.allowWhitelistedLinks,
-                        accentColor = NeonTheme.NeonAmber,
-                        onCheckedChange = { update { copy(allowWhitelistedLinks = it) } }
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = "Whitelisted: discord.com, youtube.com, github.com",
-                        color = NeonTheme.TextDim,
-                        fontSize = 11.sp,
-                        fontFamily = FontFamily.Monospace
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // ── 3. Spam Protection ━━━━━━━━━━━━━━━━━━━━
-        ModCard(
-            title = "Spam Protection",
-            subtitle = "Rate limiting & auto-mute for spam",
-            icon = "🛡️",
-            accentColor = NeonTheme.NeonCyan,
-            enabled = state.spamProtectionEnabled,
-            onToggle = { update { copy(spamProtectionEnabled = it) } }
-        ) {
-            AnimatedVisibility(
-                visible = state.spamProtectionEnabled,
-                enter = expandVertically(),
-                exit = shrinkVertically()
-            ) {
-                Column(modifier = Modifier.padding(top = 12.dp)) {
-                    // Message threshold slider
-                    LabeledSlider(
-                        label = "Message Threshold",
-                        value = state.spamMessageThreshold.toFloat() / 20f,
-                        valueLabel = "${state.spamMessageThreshold} msgs",
-                        accentColor = NeonTheme.NeonCyan,
-                        onValueChange = {
-                            update { copy(spamMessageThreshold = (it * 20).roundToInt().coerceIn(2, 20)) }
-                        }
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    // Time window slider
-                    LabeledSlider(
-                        label = "Time Window",
-                        value = state.spamWindowSeconds.toFloat() / 60f,
-                        valueLabel = "${state.spamWindowSeconds}s",
-                        accentColor = NeonTheme.NeonCyan,
-                        onValueChange = {
-                            update { copy(spamWindowSeconds = (it * 60).roundToInt().coerceIn(5, 60)) }
-                        }
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    // Mute duration slider
-                    LabeledSlider(
-                        label = "Mute Duration",
-                        value = state.spamMuteDurationMinutes.toFloat() / 60f,
-                        valueLabel = "${state.spamMuteDurationMinutes} min",
-                        accentColor = NeonTheme.NeonCyan,
-                        onValueChange = {
-                            update { copy(spamMuteDurationMinutes = (it * 60).roundToInt().coerceIn(1, 60)) }
-                        }
-                    )
-                }
-            }
-        }
-
-        Spacer(Modifier.height(24.dp))
-
-        // ── Save Button ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        Button(
-            onClick = { onConfigChanged(state) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .height(52.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = NeonTheme.NeonGreen.copy(alpha = 0.15f),
-                contentColor = NeonTheme.NeonGreen
-            )
-        ) {
-            Text(
-                text = "▸ DEPLOY AUTOMOD CONFIG",
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                letterSpacing = 1.sp
-            )
-        }
-
-        Spacer(Modifier.height(32.dp))
-    }
-}
-
-// ─── Screen Header ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-@Composable
-private fun ScreenHeader() {
-    Surface(
-        color = NeonTheme.SurfaceCard,
-        tonalElevation = 4.dp,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
-            Text(
-                text = "▌ AUTOMOD",
-                color = NeonTheme.NeonGreen,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
-                letterSpacing = 2.sp
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Configure AI-powered moderation rules for your server.",
-                color = NeonTheme.TextSecondary,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-    }
-}
-
-// ─── Reusable Mod Card ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-@Composable
-private fun ModCard(
-    title: String,
-    subtitle: String,
-    icon: String,
-    accentColor: Color,
-    enabled: Boolean,
-    onToggle: (Boolean) -> Unit,
-    expandedContent: @Composable ColumnScope.() -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .border(
-                width = 1.dp,
-                color = if (enabled) accentColor.copy(alpha = 0.4f) else NeonTheme.SurfaceBorder,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .background(
-                if (enabled) {
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            accentColor.copy(alpha = 0.05f),
-                            NeonTheme.SurfaceCard
-                        )
-                    )
-                } else {
-                    Brush.verticalGradient(
-                        colors = listOf(NeonTheme.SurfaceCard, NeonTheme.SurfaceCard)
-                    )
-                }
-            )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = icon, fontSize = 22.sp)
-                    Spacer(Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = title,
-                            color = if (enabled) accentColor else NeonTheme.TextPrimary,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.Monospace
-                        )
-                        Text(
-                            text = subtitle,
-                            color = NeonTheme.TextDim,
-                            fontSize = 11.sp,
-                            fontFamily = FontFamily.Monospace
-                        )
-                    }
-                }
-
-                Switch(
-                    checked = enabled,
-                    onCheckedChange = onToggle,
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = accentColor,
-                        checkedTrackColor = accentColor.copy(alpha = 0.3f),
-                        uncheckedThumbColor = NeonTheme.TextSecondary,
-                        uncheckedTrackColor = NeonTheme.SwitchTrackOff
-                    )
+                Text(
+                    text = "AutoMod",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = DiscordPalette.TextPrimary,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Text(
+                    text = "Discord-style moderation settings with clear toggles, restrained blurple highlights and dark layered cards.",
+                    color = DiscordPalette.TextSecondary,
+                    lineHeight = 20.sp,
                 )
             }
-
-            expandedContent()
         }
-    }
-}
 
-// ─── Labeled Slider ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-@Composable
-private fun LabeledSlider(
-    label: String,
-    value: Float,
-    valueLabel: String,
-    accentColor: Color,
-    onValueChange: (Float) -> Unit
-) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        SettingsCard(
+            title = "Message safety",
+            subtitle = "Toxic content detection and action policy.",
         ) {
-            Text(
-                text = label.uppercase(),
-                color = NeonTheme.TextSecondary,
-                fontSize = 10.sp,
-                fontFamily = FontFamily.Monospace,
-                letterSpacing = 1.sp
+            SettingSwitchRow(
+                title = "Enable toxicity filter",
+                subtitle = "Turn on automatic toxicity checks before actioning messages.",
+                checked = state.toxicityFilterEnabled,
+                onCheckedChange = { update { copy(toxicityFilterEnabled = it) } },
             )
-            Text(
-                text = valueLabel,
-                color = accentColor,
-                fontSize = 12.sp,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            )
+            if (state.toxicityFilterEnabled) {
+                Spacer(Modifier.height(12.dp))
+                SliderSetting(
+                    label = "Sensitivity",
+                    valueLabel = "${(state.toxicitySensitivity * 100).roundToInt()}%",
+                    value = state.toxicitySensitivity,
+                    onValueChange = { update { copy(toxicitySensitivity = it) } },
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = "Action",
+                    color = DiscordPalette.TextSecondary,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    ToxicityAction.entries.forEach { action ->
+                        ActionPill(
+                            modifier = Modifier.weight(1f),
+                            label = action.label,
+                            selected = action == state.toxicityAction,
+                            onClick = { update { copy(toxicityAction = action) } },
+                        )
+                    }
+                }
+            }
         }
-        Spacer(Modifier.height(4.dp))
-        Slider(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = accentColor,
-                activeTrackColor = accentColor,
-                inactiveTrackColor = NeonTheme.SliderInactive
+
+        SettingsCard(
+            title = "Link controls",
+            subtitle = "Block suspicious or unauthorized links.",
+        ) {
+            SettingSwitchRow(
+                title = "Block links",
+                subtitle = "Removes messages that contain links when not allowed.",
+                checked = state.linkBlockingEnabled,
+                onCheckedChange = { update { copy(linkBlockingEnabled = it) } },
             )
-        )
+            if (state.linkBlockingEnabled) {
+                Spacer(Modifier.height(12.dp))
+                SettingSwitchRow(
+                    title = "Allow whitelisted domains",
+                    subtitle = "Keep approved destinations like Discord or GitHub available.",
+                    checked = state.allowWhitelistedLinks,
+                    onCheckedChange = { update { copy(allowWhitelistedLinks = it) } },
+                )
+            }
+        }
+
+        SettingsCard(
+            title = "Spam protection",
+            subtitle = "Throttle bursts and temporary punishments.",
+        ) {
+            SettingSwitchRow(
+                title = "Enable spam protection",
+                subtitle = "Detect repeated messages inside a short time window.",
+                checked = state.spamProtectionEnabled,
+                onCheckedChange = { update { copy(spamProtectionEnabled = it) } },
+            )
+            if (state.spamProtectionEnabled) {
+                Spacer(Modifier.height(12.dp))
+                SliderSetting(
+                    label = "Message threshold",
+                    valueLabel = "${state.spamMessageThreshold} msgs",
+                    value = state.spamMessageThreshold.toFloat() / 20f,
+                    onValueChange = {
+                        update { copy(spamMessageThreshold = (it * 20).roundToInt().coerceIn(2, 20)) }
+                    },
+                )
+                Spacer(Modifier.height(12.dp))
+                SliderSetting(
+                    label = "Time window",
+                    valueLabel = "${state.spamWindowSeconds}s",
+                    value = state.spamWindowSeconds.toFloat() / 60f,
+                    onValueChange = {
+                        update { copy(spamWindowSeconds = (it * 60).roundToInt().coerceIn(5, 60)) }
+                    },
+                )
+                Spacer(Modifier.height(12.dp))
+                SliderSetting(
+                    label = "Mute duration",
+                    valueLabel = "${state.spamMuteDurationMinutes} min",
+                    value = state.spamMuteDurationMinutes.toFloat() / 60f,
+                    onValueChange = {
+                        update { copy(spamMuteDurationMinutes = (it * 60).roundToInt().coerceIn(1, 60)) }
+                    },
+                )
+            }
+        }
+
+        Button(
+            onClick = { onDeploy(state) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
+            shape = RoundedCornerShape(18.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = DiscordPalette.Blurple,
+                contentColor = Color.White,
+            ),
+        ) {
+            Text(text = "Save AutoMod", fontWeight = FontWeight.SemiBold)
+        }
     }
 }
 
-// ─── Neon Switch Row ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@Composable
+private fun SettingsCard(
+    title: String,
+    subtitle: String,
+    content: @Composable () -> Unit,
+) {
+    Surface(
+        color = DiscordPalette.Surface,
+        shape = RoundedCornerShape(24.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(text = title, color = DiscordPalette.TextPrimary, style = MaterialTheme.typography.titleLarge)
+            Text(text = subtitle, color = DiscordPalette.TextSecondary, lineHeight = 19.sp)
+            Spacer(Modifier.height(4.dp))
+            content()
+        }
+    }
+}
 
 @Composable
-private fun NeonSwitchRow(
-    label: String,
+private fun SettingSwitchRow(
+    title: String,
+    subtitle: String,
     checked: Boolean,
-    accentColor: Color,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = label,
-            color = NeonTheme.TextPrimary,
-            fontSize = 13.sp,
-            fontFamily = FontFamily.Monospace
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = accentColor,
-                checkedTrackColor = accentColor.copy(alpha = 0.3f),
-                uncheckedThumbColor = NeonTheme.TextSecondary,
-                uncheckedTrackColor = NeonTheme.SwitchTrackOff
-            )
-        )
+        Column(modifier = Modifier.weight(1f).padding(end = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(text = title, color = DiscordPalette.TextPrimary, fontWeight = FontWeight.Medium)
+            Text(text = subtitle, color = DiscordPalette.TextMuted, fontSize = 13.sp, lineHeight = 18.sp)
+        }
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
 
-// ─── Action Chip ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+@Composable
+private fun SliderSetting(
+    label: String,
+    valueLabel: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = label, color = DiscordPalette.TextPrimary, fontWeight = FontWeight.Medium)
+            Text(text = valueLabel, color = DiscordPalette.Blurple, fontWeight = FontWeight.SemiBold)
+        }
+        Slider(value = value, onValueChange = onValueChange)
+    }
+}
 
 @Composable
-private fun RowScope.ActionChip(
-    action: ToxicityAction,
+private fun ActionPill(
+    label: String,
     selected: Boolean,
-    accentColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    OutlinedButton(
+    Button(
         onClick = onClick,
-        modifier = Modifier.weight(1f),
-        shape = RoundedCornerShape(8.dp),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = if (selected) accentColor.copy(alpha = 0.15f) else Color.Transparent,
-            contentColor = if (selected) accentColor else NeonTheme.TextSecondary
+        modifier = modifier.height(44.dp),
+        shape = RoundedCornerShape(14.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (selected) DiscordPalette.Blurple else DiscordPalette.SurfaceBright,
+            contentColor = Color.White,
         ),
-        border = ButtonDefaults.outlinedButtonBorder.copy(
-            brush = Brush.linearGradient(
-                colors = if (selected) listOf(accentColor, accentColor)
-                else listOf(NeonTheme.SurfaceBorder, NeonTheme.SurfaceBorder)
-            )
-        ),
-        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
     ) {
-        Text(
-            text = "${action.icon}\n${action.label}",
-            fontSize = 10.sp,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            lineHeight = 16.sp
-        )
+        Text(text = label, fontWeight = FontWeight.Medium, fontSize = 12.sp)
     }
 }

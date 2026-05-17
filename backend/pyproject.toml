@@ -1,0 +1,17 @@
+[project]
+name = "discord-bot-maker-backend"
+version = "0.1.0"
+description = "Backend for Discord Bot Maker Android MVP"
+requires-python = ">=3.13"
+dependencies = [
+  "cryptography>=44.0.0,<45.0.0",
+  "discord.py>=2.5.0,<3.0.0",
+  "fastapi>=0.115.0,<0.116.0",
+  "httpx>=0.28.0,<0.29.0",
+  "pydantic>=2.10.0,<3.0.0",
+  "pytest>=8.3.0,<9.0.0",
+  "uvicorn>=0.34.0,<0.35.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

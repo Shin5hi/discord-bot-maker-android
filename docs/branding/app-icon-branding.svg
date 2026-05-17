@@ -1,0 +1,69 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#232428"/>
+      <stop offset="1" stop-color="#1E1F22"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="206" y1="180" x2="588" y2="642" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#9FB0FF"/>
+      <stop offset="0.44" stop-color="#6576FF"/>
+      <stop offset="1" stop-color="#4656F4"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="184" y1="192" x2="502" y2="584" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7E0FF"/>
+      <stop offset="0.34" stop-color="#93A4FF"/>
+      <stop offset="1" stop-color="#4B5CFF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="274" y1="454" x2="462" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#29F0E2"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="22" stdDeviation="24" flood-color="#000915" flood-opacity="0.36"/>
+    </filter>
+    <g id="mark">
+      <path d="M252 270 L216 202" stroke="url(#shell)" stroke-width="41" stroke-linecap="round"/>
+      <path d="M482 270 L518 202" stroke="url(#shell)" stroke-width="41" stroke-linecap="round"/>
+      <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" fill="url(#shell)"/>
+      <path d="M367 240 C497 240 580 325 580 448 L580 512 C580 597 523 621 367 621 C211 621 154 597 154 512 L154 448 C154 325 237 240 367 240 Z" stroke="url(#edge)" stroke-width="3" opacity="0.75"/>
+      <path d="M193 488 C193 412 249 384 336 384 L398 384 C485 384 541 412 541 488 L541 512 C541 586 486 600 398 600 L336 600 C248 600 193 586 193 512 Z" fill="#050A15"/>
+      <path d="M263 454 L326 502 L263 550" stroke="url(#accent)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M359 525 L411 525" stroke="#22D3EE" stroke-width="25" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect x="72" y="54" width="1456" height="884" rx="32" fill="none" stroke="#3A3D46"/>
+
+  <text x="128" y="122" fill="#6F7BFF" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800">APP ICON SYSTEM</text>
+  <text x="128" y="196" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="82" font-weight="800">Discord Bot Maker</text>
+  <text x="128" y="252" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="30">A launcher mark built to survive Android circle and rounded-square masks.</text>
+
+  <text x="320" y="334" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">CIRCULAR MASK</text>
+  <g filter="url(#soft)">
+    <circle cx="450" cy="580" r="214" fill="#FFFFFF"/>
+    <g transform="translate(193 305) scale(0.709)">
+      <use href="#mark"/>
+    </g>
+  </g>
+
+  <text x="922" y="334" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">ROUNDED SQUARE</text>
+  <g filter="url(#soft)">
+    <rect x="812" y="366" width="428" height="428" rx="112" fill="#FFFFFF"/>
+    <g transform="translate(740 276) scale(0.78)">
+      <use href="#mark"/>
+    </g>
+  </g>
+
+  <rect x="128" y="826" width="702" height="78" rx="20" fill="#232428" stroke="#4E5058" stroke-width="2"/>
+  <rect x="164" y="848" width="48" height="34" rx="10" fill="#5865F2"/>
+  <text x="232" y="873" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="750">Blurple</text>
+  <rect x="370" y="848" width="48" height="34" rx="10" fill="#22D3EE"/>
+  <text x="438" y="873" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="750">Cyan terminal</text>
+  <rect x="628" y="848" width="48" height="34" rx="10" fill="#050A15"/>
+  <text x="696" y="873" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="750">Ink face</text>
+
+  <rect x="878" y="826" width="522" height="78" rx="20" fill="#232428" stroke="#4E5058" stroke-width="2"/>
+  <text x="914" y="858" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="800">Notes</text>
+  <text x="914" y="886" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="19">Same vector geometry, centered against each launcher mask.</text>
+</svg>

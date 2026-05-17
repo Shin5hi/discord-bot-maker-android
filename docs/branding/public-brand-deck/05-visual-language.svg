@@ -1,0 +1,19 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#050812"/><stop offset="1" stop-color="#0A1224"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="96" y="112" fill="#8EA9FF" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="800">VISUAL LANGUAGE</text>
+  <text x="96" y="194" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="76" font-weight="850">Dark surfaces. Electric signals.</text>
+  <text x="98" y="250" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="28">A compact palette designed for command feedback, app controls and brand moments.</text>
+  <rect x="112" y="336" width="170" height="120" rx="26" fill="#5865F2"/><text x="112" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Blurple</text><text x="112" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#5865F2</text>
+  <rect x="344" y="336" width="170" height="120" rx="26" fill="#3B82F6"/><text x="344" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Blue</text><text x="344" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#3B82F6</text>
+  <rect x="576" y="336" width="170" height="120" rx="26" fill="#22D3EE"/><text x="576" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Cyan</text><text x="576" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#22D3EE</text>
+  <rect x="808" y="336" width="170" height="120" rx="26" fill="#9EEB25"/><text x="808" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Android</text><text x="808" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#9EEB25</text>
+  <rect x="1040" y="336" width="170" height="120" rx="26" fill="#030712" stroke="#2A3F67"/><text x="1040" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">Ink</text><text x="1040" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#030712</text>
+  <rect x="1272" y="336" width="170" height="120" rx="26" fill="#F5F7FF"/><text x="1272" y="504" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="800">White</text><text x="1272" y="544" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="22">#F5F7FF</text>
+  <text x="112" y="690" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="850">Aa</text>
+  <text x="214" y="672" fill="#F5F7FF" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="800">Bold sans identity</text>
+  <text x="214" y="722" fill="#AAB6CE" font-family="Segoe UI, Arial, sans-serif" font-size="26">Clean support copy with terminal accents only when useful.</text>
+  <text x="1060" y="708" fill="#22D3EE" font-family="Consolas, monospace" font-size="50" font-weight="700">&gt;_</text>
+</svg>
