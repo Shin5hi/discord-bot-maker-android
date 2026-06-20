@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.discordbotmaker.android.ui.navigation.AppNavigation
 import com.discordbotmaker.android.ui.theme.AppColors
 import com.discordbotmaker.android.ui.theme.AppTheme
 
@@ -20,8 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = AppColors.Background
                 ) {
-                    // App navigation entry point
-                    // AppNavigation()
+                    AppNavigation()
                 }
             }
         }
