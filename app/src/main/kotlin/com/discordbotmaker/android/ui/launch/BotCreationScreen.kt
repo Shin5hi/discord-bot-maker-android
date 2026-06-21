@@ -77,7 +77,9 @@ fun BotCreationScreen(
     var currentStepName by rememberSaveable { mutableStateOf(DeployStep.CONNECT.name) }
     var isDeploying by rememberSaveable { mutableStateOf(false) }
     var deployComplete by rememberSaveable { mutableStateOf(false) }
-    val currentStep = remember(currentStepName) { DeployStep.valueOf(currentStepName) }
+    val currentStep = remember(currentStepName) {
+        runCatching { DeployStep.valueOf(currentStepName) }.getOrDefault(DeployStep.CONNECT)
+    }
     val isTokenValid by remember(token) { derivedStateOf { isTokenFormatValid(token) } }
 
     Column(

@@ -65,7 +65,8 @@ private val AutoModConfigSaver = Saver<AutoModConfig, List<Any>>(
         AutoModConfig(
             toxicityFilterEnabled = values[0] as Boolean,
             toxicitySensitivity = (values[1] as Number).toFloat(),
-            toxicityAction = ToxicityAction.valueOf(values[2] as String),
+            toxicityAction = runCatching { ToxicityAction.valueOf(values[2] as String) }
+                .getOrDefault(ToxicityAction.DELETE),
             linkBlockingEnabled = values[3] as Boolean,
             allowWhitelistedLinks = values[4] as Boolean,
             spamProtectionEnabled = values[5] as Boolean,

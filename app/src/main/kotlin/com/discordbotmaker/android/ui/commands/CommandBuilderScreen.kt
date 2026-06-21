@@ -59,12 +59,18 @@ data class BotCommand(
 
 private val BotCommandSaver = Saver<BotCommand, List<String>>(
     save = { listOf(it.name, it.responseType.name, it.responseContent) },
-    restore = { values -> BotCommand(values[0], ResponseType.valueOf(values[1]), values[2]) }
+    restore = { values ->
+        runCatching { BotCommand(values[0], ResponseType.valueOf(values[1]), values[2]) }.getOrNull()
+    }
 )
 
 private val NullableBotCommandSaver = Saver<BotCommand?, List<String>?>(
     save = { command -> command?.let { listOf(it.name, it.responseType.name, it.responseContent) } },
-    restore = { values -> values?.let { BotCommand(it[0], ResponseType.valueOf(it[1]), it[2]) } }
+    restore = { values ->
+        values?.let {
+            runCatching { BotCommand(it[0], ResponseType.valueOf(it[1]), it[2]) }.getOrNull()
+        }
+    }
 )
 
 // ─── Command Builder Screen ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -556,7 +562,9 @@ private fun CommandEditorDialog(
     var selectedTypeName by rememberSaveable(existingCommand?.name) { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
     var responseContent by rememberSaveable(existingCommand?.name) { mutableStateOf(existingCommand?.responseContent ?: "") }
     var nameError by rememberSaveable(existingCommand?.name) { mutableStateOf<String?>(null) }
-    val selectedType = remember(selectedTypeName) { ResponseType.valueOf(selectedTypeName) }
+    val selectedType = remember(selectedTypeName) {
+        runCatching { ResponseType.valueOf(selectedTypeName) }.getOrDefault(ResponseType.TEXT)
+    }
 
     // Validate name
     fun validateName(): Boolean {
