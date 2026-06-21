@@ -71,6 +71,7 @@ fun isTokenFormatValid(token: String): Boolean =
 fun BotCreationScreen(
     onDeploy: (token: String, botName: String) -> Unit = { _, _ -> }
 ) {
+    // Keep the token in memory only so sensitive credentials are not persisted across recreation.
     var token by remember { mutableStateOf("") }
     var botName by rememberSaveable { mutableStateOf("") }
     var showToken by rememberSaveable { mutableStateOf(false) }

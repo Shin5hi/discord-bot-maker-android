@@ -1,5 +1,6 @@
 package com.discordbotmaker.android.ui.commands
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
@@ -57,20 +58,44 @@ data class BotCommand(
     val responseContent: String = ""
 )
 
+private const val COMMAND_BUILDER_TAG = "CommandBuilderScreen"
+
+private fun restoreBotCommand(values: List<String>, source: String): BotCommand? {
+    if (values.size != 3) {
+        Log.w(COMMAND_BUILDER_TAG, "Ignoring saved command state from $source with ${values.size} values")
+        return null
+    }
+
+    val responseType = try {
+        ResponseType.valueOf(values[1])
+    } catch (error: IllegalArgumentException) {
+        Log.w(COMMAND_BUILDER_TAG, "Ignoring saved command state from $source with invalid response type '${values[1]}'", error)
+        return null
+    }
+
+    return BotCommand(
+        name = values[0],
+        responseType = responseType,
+        responseContent = values[2]
+    )
+}
+
+private fun responseTypeFromNameOrDefault(name: String): ResponseType =
+    try {
+        ResponseType.valueOf(name)
+    } catch (error: IllegalArgumentException) {
+        Log.w(COMMAND_BUILDER_TAG, "Falling back to TEXT for invalid response type '$name'", error)
+        ResponseType.TEXT
+    }
+
 private val BotCommandSaver = Saver<BotCommand, List<String>>(
     save = { listOf(it.name, it.responseType.name, it.responseContent) },
-    restore = { values ->
-        runCatching { BotCommand(values[0], ResponseType.valueOf(values[1]), values[2]) }.getOrNull()
-    }
+    restore = { values -> restoreBotCommand(values, "BotCommandSaver") }
 )
 
 private val NullableBotCommandSaver = Saver<BotCommand?, List<String>?>(
     save = { command -> command?.let { listOf(it.name, it.responseType.name, it.responseContent) } },
-    restore = { values ->
-        values?.let {
-            runCatching { BotCommand(it[0], ResponseType.valueOf(it[1]), it[2]) }.getOrNull()
-        }
-    }
+    restore = { values -> values?.let { restoreBotCommand(it, "NullableBotCommandSaver") } }
 )
 
 // ─── Command Builder Screen ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -562,7 +587,7 @@ private fun CommandEditorDialog(
     var selectedTypeName by rememberSaveable(existingCommand?.name) { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
     var responseContent by rememberSaveable(existingCommand?.name) { mutableStateOf(existingCommand?.responseContent ?: "") }
     var nameError by rememberSaveable(existingCommand?.name) { mutableStateOf<String?>(null) }
-    val selectedType = runCatching { ResponseType.valueOf(selectedTypeName) }.getOrDefault(ResponseType.TEXT)
+    val selectedType = responseTypeFromNameOrDefault(selectedTypeName)
 
     // Validate name
     fun validateName(): Boolean {

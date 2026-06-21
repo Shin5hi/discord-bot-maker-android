@@ -71,6 +71,7 @@ class TestBackendApiStructure:
         assert '@app.post("/api/bots/deploy", status_code=202, response_model=DeployResponse)' in self.content
         assert "DISCORD_TOKEN_RE" in self.content
         assert "Invalid Discord bot token format" in self.content
+        assert "Failed to persist deployment state to Redis" in self.content
 
     def test_health_endpoint_reports_redis_status(self):
         assert '{"status": "healthy", "redis": "connected"}' in self.content

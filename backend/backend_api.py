@@ -260,7 +260,7 @@ async def deploy_bot(request: DeployRequest) -> DeployResponse:
         await r.publish(LOG_CHANNEL, log_entry.model_dump_json())
     except Exception as exc:
         logger.exception("Failed to persist deployment state")
-        raise HTTPException(status_code=503, detail="Deployment backend unavailable") from exc
+        raise HTTPException(status_code=503, detail="Failed to persist deployment state to Redis") from exc
     return DeployResponse(status=DeployStatus.PROVISIONING, bot_name=request.bot_name, deploy_id=deploy_id, message=f"Deployment initiated for '{request.bot_name}'. Provisioning cloud resources in us-east-1.", region="us-east-1", estimated_time_seconds=30)
 
 
