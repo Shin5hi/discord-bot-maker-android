@@ -6,7 +6,7 @@ import os
 import re
 import pytest
 
-BASE_DIR = "/root/workspace/discord-bot-maker-android"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE_DIR, "ui")
 
 def read_file(path):

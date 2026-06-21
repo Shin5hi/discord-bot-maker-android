@@ -40,7 +40,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.discordbotmaker.android.ui.theme.NeonColors
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.discordbotmaker.android.ui.theme.AppColors
 
 // ─── Deployment Steps ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -70,23 +71,19 @@ fun isTokenFormatValid(token: String): Boolean =
 fun BotCreationScreen(
     onDeploy: (token: String, botName: String) -> Unit = { _, _ -> }
 ) {
-    var token by remember { mutableStateOf("") }
-    var botName by remember { mutableStateOf("") }
-    var isTokenValid by remember { mutableStateOf(false) }
-    var showToken by remember { mutableStateOf(false) }
-    var currentStep by remember { mutableStateOf(DeployStep.CONNECT) }
-    var isDeploying by remember { mutableStateOf(false) }
-    var deployComplete by remember { mutableStateOf(false) }
-
-    // Validate token format reactively
-    LaunchedEffect(token) {
-        isTokenValid = isTokenFormatValid(token)
-    }
+    var token by rememberSaveable { mutableStateOf("") }
+    var botName by rememberSaveable { mutableStateOf("") }
+    var showToken by rememberSaveable { mutableStateOf(false) }
+    var currentStepName by rememberSaveable { mutableStateOf(DeployStep.CONNECT.name) }
+    var isDeploying by rememberSaveable { mutableStateOf(false) }
+    var deployComplete by rememberSaveable { mutableStateOf(false) }
+    val currentStep = remember(currentStepName) { DeployStep.valueOf(currentStepName) }
+    val isTokenValid by remember(token) { derivedStateOf { isTokenFormatValid(token) } }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(NeonColors.Background)
+            .background(AppColors.Background)
             .verticalScroll(rememberScrollState())
     ) {
         // ── Header ━━━━━━━━━━
@@ -113,7 +110,7 @@ fun BotCreationScreen(
                 onToggleVisibility = { showToken = !showToken },
                 onValidateAndProceed = {
                     if (isTokenValid) {
-                        currentStep = DeployStep.CONFIG
+                        currentStepName = DeployStep.CONFIG.name
                     }
                 }
             )
@@ -128,10 +125,10 @@ fun BotCreationScreen(
             ConfigStepContent(
                 botName = botName,
                 onBotNameChange = { botName = it },
-                onBack = { currentStep = DeployStep.CONNECT },
+                onBack = { currentStepName = DeployStep.CONNECT.name },
                 onProceed = {
                     if (botName.isNotBlank()) {
-                        currentStep = DeployStep.DEPLOY
+                        currentStepName = DeployStep.DEPLOY.name
                     }
                 }
             )
@@ -147,7 +144,7 @@ fun BotCreationScreen(
                 botName = botName,
                 isDeploying = isDeploying,
                 deployComplete = deployComplete,
-                onBack = { currentStep = DeployStep.CONFIG },
+                onBack = { currentStepName = DeployStep.CONFIG.name },
                 onDeploy = {
                     isDeploying = true
                     onDeploy(token, botName)
@@ -164,7 +161,7 @@ fun BotCreationScreen(
 @Composable
 private fun LaunchHeader() {
     Surface(
-        color = NeonColors.SurfaceCard,
+        color = AppColors.Surface,
         tonalElevation = 4.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -173,7 +170,7 @@ private fun LaunchHeader() {
         ) {
             Text(
                 text = "▌ BOT LAUNCH",
-                color = NeonColors.NeonCyan,
+                color = AppColors.Primary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Monospace,
@@ -182,7 +179,7 @@ private fun LaunchHeader() {
             Spacer(Modifier.height(4.dp))
             Text(
                 text = "Connect your Discord token, configure, and deploy.",
-                color = NeonColors.TextSecondary,
+                color = AppColors.TextSecondary,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -206,14 +203,14 @@ private fun StepIndicator(currentStep: DeployStep) {
             val isCompleted = step.index < currentStep.index
 
             val dotColor = when {
-                isCompleted -> NeonColors.NeonGreen
-                isActive -> NeonColors.NeonCyan
-                else -> NeonColors.TextDim
+                isCompleted -> AppColors.Success
+                isActive -> AppColors.Primary
+                else -> AppColors.TextMuted
             }
             val labelColor = when {
-                isCompleted -> NeonColors.NeonGreen
-                isActive -> NeonColors.NeonCyan
-                else -> NeonColors.TextDim
+                isCompleted -> AppColors.Success
+                isActive -> AppColors.Primary
+                else -> AppColors.TextMuted
             }
 
             // Step circle + label
@@ -261,8 +258,8 @@ private fun StepIndicator(currentStep: DeployStep) {
                         .height(2.dp)
                         .weight(0.6f)
                         .background(
-                            if (isCompleted) NeonColors.NeonGreen.copy(alpha = 0.5f)
-                            else NeonColors.SurfaceBorder
+                            if (isCompleted) AppColors.Success.copy(alpha = 0.5f)
+                            else AppColors.SurfaceBorder
                         )
                 )
             }
@@ -285,7 +282,7 @@ private fun ConnectStepContent(
         // Section label
         Text(
             text = "DISCORD BOT TOKEN",
-            color = NeonColors.TextSecondary,
+            color = AppColors.TextSecondary,
             fontSize = 10.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -313,9 +310,9 @@ private fun ConnectStepContent(
                 else -> "✖ Invalid token format — expected: Base64.Timestamp.HMAC"
             },
             color = when {
-                token.isEmpty() -> NeonColors.TextDim
-                isTokenValid -> NeonColors.NeonGreen
-                else -> NeonColors.NeonRed
+                token.isEmpty() -> AppColors.TextMuted
+                isTokenValid -> AppColors.Success
+                else -> AppColors.Error
             },
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace
@@ -325,7 +322,7 @@ private fun ConnectStepContent(
 
         // Validate button
         val validateButtonColor by animateColorAsState(
-            targetValue = if (isTokenValid) NeonColors.NeonGreen else NeonColors.NeonMagenta,
+            targetValue = if (isTokenValid) AppColors.Success else AppColors.AccentBrain,
             animationSpec = tween(durationMillis = 400),
             label = "validateBtnColor"
         )
@@ -340,8 +337,8 @@ private fun ConnectStepContent(
             colors = ButtonDefaults.buttonColors(
                 containerColor = validateButtonColor.copy(alpha = 0.15f),
                 contentColor = validateButtonColor,
-                disabledContainerColor = NeonColors.SurfaceBorder.copy(alpha = 0.3f),
-                disabledContentColor = NeonColors.TextDim
+                disabledContainerColor = AppColors.SurfaceBorder.copy(alpha = 0.3f),
+                disabledContentColor = AppColors.TextMuted
             )
         ) {
             Text(
@@ -367,9 +364,9 @@ private fun NeonTokenInput(
 ) {
     val borderColor by animateColorAsState(
         targetValue = when {
-            value.isEmpty() -> NeonColors.NeonCyan.copy(alpha = 0.4f)
-            isValid -> NeonColors.NeonGreen
-            else -> NeonColors.NeonMagenta
+            value.isEmpty() -> AppColors.Primary.copy(alpha = 0.4f)
+            isValid -> AppColors.Success
+            else -> AppColors.AccentBrain
         },
         animationSpec = tween(durationMillis = 300),
         label = "borderColor"
@@ -387,7 +384,7 @@ private fun NeonTokenInput(
                 ),
                 shape = RoundedCornerShape(10.dp)
             )
-            .background(NeonColors.InputBackground),
+            .background(AppColors.InputBackground),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Lock icon
@@ -407,12 +404,12 @@ private fun NeonTokenInput(
                 .weight(1f)
                 .padding(vertical = 4.dp),
             textStyle = TextStyle(
-                color = NeonColors.TextPrimary,
+                color = AppColors.TextPrimary,
                 fontSize = 13.sp,
                 fontFamily = FontFamily.Monospace
             ),
             singleLine = true,
-            cursorBrush = SolidColor(NeonColors.NeonCyan),
+            cursorBrush = SolidColor(AppColors.Primary),
             visualTransformation = if (showToken) VisualTransformation.None
                 else PasswordVisualTransformation('•'),
             decorationBox = { innerTextField ->
@@ -420,7 +417,7 @@ private fun NeonTokenInput(
                     if (value.isEmpty()) {
                         Text(
                             text = "NzM4NTk3…",
-                            color = NeonColors.TextDim,
+                            color = AppColors.TextMuted,
                             fontSize = 13.sp,
                             fontFamily = FontFamily.Monospace
                         )
@@ -464,7 +461,7 @@ private fun ConfigStepContent(
         // Section label
         Text(
             text = "BOT NAME",
-            color = NeonColors.TextSecondary,
+            color = AppColors.TextSecondary,
             fontSize = 10.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
@@ -483,13 +480,13 @@ private fun ConfigStepContent(
                     width = 1.5.dp,
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            NeonColors.NeonMagenta.copy(alpha = 0.5f),
-                            NeonColors.NeonCyan.copy(alpha = 0.5f)
+                            AppColors.AccentBrain.copy(alpha = 0.5f),
+                            AppColors.Primary.copy(alpha = 0.5f)
                         )
                     ),
                     shape = RoundedCornerShape(10.dp)
                 )
-                .background(NeonColors.InputBackground),
+                .background(AppColors.InputBackground),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -507,18 +504,18 @@ private fun ConfigStepContent(
                     .weight(1f)
                     .padding(vertical = 4.dp, horizontal = 0.dp),
                 textStyle = TextStyle(
-                    color = NeonColors.TextPrimary,
+                    color = AppColors.TextPrimary,
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Monospace
                 ),
                 singleLine = true,
-                cursorBrush = SolidColor(NeonColors.NeonMagenta),
+                cursorBrush = SolidColor(AppColors.AccentBrain),
                 decorationBox = { innerTextField ->
                     Box {
                         if (botName.isEmpty()) {
                             Text(
                                 text = "My Awesome Bot",
-                                color = NeonColors.TextDim,
+                                color = AppColors.TextMuted,
                                 fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
                             )
@@ -535,7 +532,7 @@ private fun ConfigStepContent(
 
         Text(
             text = "This name will appear in your bot's dashboard and logs.",
-            color = NeonColors.TextDim,
+            color = AppColors.TextMuted,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace
         )
@@ -555,7 +552,7 @@ private fun ConfigStepContent(
                     .height(48.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = NeonColors.TextSecondary
+                    contentColor = AppColors.TextSecondary
                 )
             ) {
                 Text(
@@ -576,10 +573,10 @@ private fun ConfigStepContent(
                     .height(48.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = NeonColors.NeonCyan.copy(alpha = 0.15f),
-                    contentColor = NeonColors.NeonCyan,
-                    disabledContainerColor = NeonColors.SurfaceBorder.copy(alpha = 0.3f),
-                    disabledContentColor = NeonColors.TextDim
+                    containerColor = AppColors.Primary.copy(alpha = 0.15f),
+                    contentColor = AppColors.Primary,
+                    disabledContainerColor = AppColors.SurfaceBorder.copy(alpha = 0.3f),
+                    disabledContentColor = AppColors.TextMuted
                 )
             ) {
                 Text(
@@ -613,14 +610,14 @@ private fun DeployStepContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .border(1.dp, NeonColors.SurfaceBorder, RoundedCornerShape(12.dp))
-                .background(NeonColors.SurfaceCard)
+                .border(1.dp, AppColors.SurfaceBorder, RoundedCornerShape(12.dp))
+                .background(AppColors.Surface)
                 .padding(16.dp)
         ) {
             Column {
                 Text(
                     text = "DEPLOYMENT SUMMARY",
-                    color = NeonColors.NeonCyan,
+                    color = AppColors.Primary,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -645,13 +642,13 @@ private fun DeployStepContent(
             // Deploying spinner
             CircularProgressIndicator(
                 modifier = Modifier.size(32.dp),
-                color = NeonColors.NeonGreen,
+                color = AppColors.Success,
                 strokeWidth = 2.dp
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = "Deploying…",
-                color = NeonColors.NeonGreen,
+                color = AppColors.Success,
                 fontSize = 12.sp,
                 fontFamily = FontFamily.Monospace
             )
@@ -661,7 +658,7 @@ private fun DeployStepContent(
         if (deployComplete) {
             Text(
                 text = "✓ DEPLOYED SUCCESSFULLY",
-                color = NeonColors.NeonGreen,
+                color = AppColors.Success,
                 fontSize = 14.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -684,7 +681,7 @@ private fun DeployStepContent(
                     .height(44.dp),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = NeonColors.TextSecondary
+                    contentColor = AppColors.TextSecondary
                 )
             ) {
                 Text(
@@ -709,13 +706,13 @@ private fun SummaryRow(label: String, value: String) {
     ) {
         Text(
             text = label.uppercase(),
-            color = NeonColors.TextDim,
+            color = AppColors.TextMuted,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace
         )
         Text(
             text = value,
-            color = NeonColors.TextPrimary,
+            color = AppColors.TextPrimary,
             fontSize = 11.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold
@@ -740,8 +737,8 @@ private fun GlowingDeployButton(onClick: () -> Unit) {
         label = "glowAlpha"
     )
 
-    val neonGreen = NeonColors.NeonGreen
-    val neonCyan = NeonColors.NeonCyan
+    val neonGreen = AppColors.Success
+    val neonCyan = AppColors.Primary
 
     Box(
         modifier = Modifier
@@ -785,7 +782,7 @@ private fun GlowingDeployButton(onClick: () -> Unit) {
     ) {
         Text(
             text = "🚀  DEPLOY TO CLOUD",
-            color = NeonColors.NeonGreen,
+            color = AppColors.Success,
             fontSize = 16.sp,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,

@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,35 @@ enum class ToxicityAction(val label: String, val icon: String) {
     BAN("Ban", "🚫")
 }
 
+private val AutoModConfigSaver = Saver<AutoModConfig, List<Any>>(
+    save = {
+        listOf(
+            it.toxicityFilterEnabled,
+            it.toxicitySensitivity,
+            it.toxicityAction.name,
+            it.linkBlockingEnabled,
+            it.allowWhitelistedLinks,
+            it.spamProtectionEnabled,
+            it.spamMessageThreshold,
+            it.spamWindowSeconds,
+            it.spamMuteDurationMinutes
+        )
+    },
+    restore = { values ->
+        AutoModConfig(
+            toxicityFilterEnabled = values[0] as Boolean,
+            toxicitySensitivity = (values[1] as Number).toFloat(),
+            toxicityAction = ToxicityAction.valueOf(values[2] as String),
+            linkBlockingEnabled = values[3] as Boolean,
+            allowWhitelistedLinks = values[4] as Boolean,
+            spamProtectionEnabled = values[5] as Boolean,
+            spamMessageThreshold = (values[6] as Number).toInt(),
+            spamWindowSeconds = (values[7] as Number).toInt(),
+            spamMuteDurationMinutes = (values[8] as Number).toInt()
+        )
+    }
+)
+
 // ─── AutoMod Screen ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
@@ -52,7 +83,7 @@ fun AutoModScreen(
     config: AutoModConfig = AutoModConfig(),
     onConfigChanged: (AutoModConfig) -> Unit = {}
 ) {
-    var state by remember { mutableStateOf(config) }
+    var state by rememberSaveable(config, stateSaver = AutoModConfigSaver) { mutableStateOf(config) }
 
     // Propagate changes upward
     fun update(block: AutoModConfig.() -> AutoModConfig) {

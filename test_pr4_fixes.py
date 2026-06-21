@@ -8,7 +8,7 @@ import os
 import re
 import ast
 
-PROJECT_ROOT = "/root/workspace/discord-bot-maker-android"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 APP_SRC = os.path.join(PROJECT_ROOT, "app", "src", "main", "kotlin", "com", "discordbotmaker", "android")
 
 

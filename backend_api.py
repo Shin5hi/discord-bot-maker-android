@@ -27,7 +27,7 @@ from typing import AsyncGenerator
 import redis.asyncio as aioredis
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 LOG_CHANNEL: str = os.getenv("LOG_CHANNEL", "bot:logs")
@@ -48,9 +48,15 @@ async def get_redis() -> aioredis.Redis:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    r = await get_redis(); await r.ping(); logger.info("Connected to Redis at %s", REDIS_URL)
+    try:
+        r = await get_redis()
+        await r.ping()
+        logger.info("Connected to Redis at %s", REDIS_URL)
+    except Exception as exc:
+        logger.warning("Redis unavailable during startup: %s", exc)
     yield
-    if redis_pool: await redis_pool.close()
+    if redis_pool:
+        await redis_pool.close()
 
 app = FastAPI(title="Discord Bot Maker API", version="0.1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -89,8 +95,11 @@ async def websocket_log_stream(ws: WebSocket) -> None:
         while True:
             message = await pubsub.get_message(ignore_subscribe_messages=True, timeout=1.0)
             if message and message["type"] == "message":
-                try: log_entry = LogEntry(**json.loads(message["data"]))
-                except: log_entry = LogEntry(level=LogLevel.INFO, source="raw", message=str(message["data"]))
+                try:
+                    log_entry = LogEntry(**json.loads(message["data"]))
+                except (json.JSONDecodeError, TypeError, ValidationError) as exc:
+                    logger.warning("Invalid log payload received from Redis: %s", exc)
+                    log_entry = LogEntry(level=LogLevel.INFO, source="raw", message=str(message["data"]))
                 await ws.send_json(log_entry.model_dump())
             try:
                 client_msg = await asyncio.wait_for(ws.receive_text(), timeout=0.05)
@@ -119,7 +128,11 @@ async def publish_log(entry: LogEntry) -> dict:
 async def get_automod_config() -> AutoModConfig:
     r = await get_redis(); raw = await r.get(AUTOMOD_CONFIG_KEY)
     if raw is None: return AutoModConfig()
-    return AutoModConfig.model_validate_json(raw)
+    try:
+        return AutoModConfig.model_validate_json(raw)
+    except ValidationError as exc:
+        logger.warning("Invalid AutoMod config payload in Redis: %s", exc)
+        return AutoModConfig()
 
 
 @app.put("/api/automod/config", response_model=AutoModConfig)
@@ -180,12 +193,18 @@ async def music_get_queue() -> MusicQueueResponse:
     r = await get_redis()
     raw_queue = await r.get(MUSIC_QUEUE_KEY); tracks = []
     if raw_queue:
-        try: tracks = [MusicTrack(**i) for i in json.loads(raw_queue)]
-        except: tracks = []
+        try:
+            tracks = [MusicTrack(**i) for i in json.loads(raw_queue)]
+        except (json.JSONDecodeError, TypeError, ValidationError) as exc:
+            logger.warning("Invalid music queue payload in Redis: %s", exc)
+            tracks = []
     raw_state = await r.get(MUSIC_STATE_KEY); now_playing = None
     if raw_state:
-        try: now_playing = MusicTrack.model_validate_json(raw_state)
-        except: now_playing = None
+        try:
+            now_playing = MusicTrack.model_validate_json(raw_state)
+        except ValidationError as exc:
+            logger.warning("Invalid music state payload in Redis: %s", exc)
+            now_playing = None
     return MusicQueueResponse(queue=tracks, length=len(tracks), now_playing=now_playing)
 
 
@@ -195,8 +214,11 @@ async def music_add_track(request: MusicAddRequest) -> dict:
     track = MusicTrack(title=request.title if request.title else request.query, artist=request.artist, duration_seconds=request.duration_seconds, url=request.query)
     raw_queue = await r.get(MUSIC_QUEUE_KEY); queue = []
     if raw_queue:
-        try: queue = json.loads(raw_queue)
-        except: queue = []
+        try:
+            queue = json.loads(raw_queue)
+        except (json.JSONDecodeError, TypeError) as exc:
+            logger.warning("Invalid music queue payload in Redis while adding track: %s", exc)
+            queue = []
     queue.append(track.model_dump()); await r.set(MUSIC_QUEUE_KEY, json.dumps(queue))
     await r.publish(MUSIC_CHANNEL, json.dumps({"event": "track_added", "track": track.model_dump(), "queue_length": len(queue)}))
     log_entry = LogEntry(level=LogLevel.INFO, source="music", message=f"Track added to queue \"{track.title}\" by {track.artist}")
@@ -236,7 +258,9 @@ async def deploy_bot(request: DeployRequest) -> DeployResponse:
         await r.set(f"{DEPLOY_STATE_KEY}:{deploy_id}", json.dumps({"deploy_id": deploy_id, "bot_name": request.bot_name, "status": DeployStatus.PROVISIONING.value, "region": "us-east-1"}))
         log_entry = LogEntry(level=LogLevel.SYSTEM, source="deployer", message=f"Deployment initiated bot={request.bot_name} deploy_id={deploy_id}")
         await r.publish(LOG_CHANNEL, log_entry.model_dump_json())
-    except Exception: pass
+    except Exception as exc:
+        logger.exception("Failed to persist deployment state")
+        raise HTTPException(status_code=503, detail="Deployment backend unavailable") from exc
     return DeployResponse(status=DeployStatus.PROVISIONING, bot_name=request.bot_name, deploy_id=deploy_id, message=f"Deployment initiated for '{request.bot_name}'. Provisioning cloud resources in us-east-1.", region="us-east-1", estimated_time_seconds=30)
 
 
@@ -262,8 +286,11 @@ async def list_commands() -> list[BotCommandResponse]:
     r = await get_redis(); raw = await r.hgetall(COMMANDS_HASH_KEY)
     commands = []
     for name, data in raw.items():
-        try: commands.append(BotCommandResponse(name=name, **json.loads(data)))
-        except: continue
+        try:
+            commands.append(BotCommandResponse(name=name, **json.loads(data)))
+        except (json.JSONDecodeError, TypeError, ValidationError) as exc:
+            logger.warning("Skipping invalid command payload for %s: %s", name, exc)
+            continue
     return commands
 
 
