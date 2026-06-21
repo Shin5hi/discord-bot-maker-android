@@ -95,14 +95,20 @@ uvicorn backend_api:app --host 0.0.0.0 --port 8000 --reload
 
 ### Android App
 
-1. Open the project root in Android Studio.
-2. Sync Gradle and let dependencies resolve.
-3. Update `local.properties` with your backend URL:
+1. Open the project root in Android Studio or use the Gradle wrapper from the repository root.
+2. If `local.properties` is not created automatically, add your Android SDK path:
    ```properties
-   BACKEND_WS_URL=ws://YOUR_SERVER_IP:8000/ws/logs
-   BACKEND_API_URL=http://YOUR_SERVER_IP:8000
+   sdk.dir=/path/to/Android/sdk
    ```
-4. Build and run on your device or emulator.
+3. Verify the wrapper is available:
+   ```bash
+   ./gradlew --version
+   ```
+4. Build the debug app from the project root:
+   ```bash
+   ./gradlew :app:assembleDebug
+   ```
+5. Run on your device or emulator after Gradle sync finishes.
 
 ---
 
