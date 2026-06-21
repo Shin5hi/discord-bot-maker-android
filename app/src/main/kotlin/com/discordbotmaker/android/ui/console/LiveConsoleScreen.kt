@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ data class LogEntry(
 
 // ─── ViewModel (StateFlow-based log management) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-class LiveConsoleViewModel {
+class LiveConsoleViewModel : ViewModel() {
 
     private val _logs = MutableStateFlow<List<LogEntry>>(emptyList())
     val logs: StateFlow<List<LogEntry>> = _logs
