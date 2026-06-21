@@ -1,3 +1,5 @@
+val androidApplicationPluginId = "com.android.application"
+
 buildscript {
     repositories {
         google()
