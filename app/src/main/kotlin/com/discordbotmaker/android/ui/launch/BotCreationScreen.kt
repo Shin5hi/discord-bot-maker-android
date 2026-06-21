@@ -71,7 +71,7 @@ fun isTokenFormatValid(token: String): Boolean =
 fun BotCreationScreen(
     onDeploy: (token: String, botName: String) -> Unit = { _, _ -> }
 ) {
-    var token by rememberSaveable { mutableStateOf("") }
+    var token by remember { mutableStateOf("") }
     var botName by rememberSaveable { mutableStateOf("") }
     var showToken by rememberSaveable { mutableStateOf(false) }
     var currentStepName by rememberSaveable { mutableStateOf(DeployStep.CONNECT.name) }
