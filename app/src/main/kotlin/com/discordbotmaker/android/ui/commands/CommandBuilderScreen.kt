@@ -562,9 +562,7 @@ private fun CommandEditorDialog(
     var selectedTypeName by rememberSaveable(existingCommand?.name) { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
     var responseContent by rememberSaveable(existingCommand?.name) { mutableStateOf(existingCommand?.responseContent ?: "") }
     var nameError by rememberSaveable(existingCommand?.name) { mutableStateOf<String?>(null) }
-    val selectedType = remember(selectedTypeName) {
-        runCatching { ResponseType.valueOf(selectedTypeName) }.getOrDefault(ResponseType.TEXT)
-    }
+    val selectedType = runCatching { ResponseType.valueOf(selectedTypeName) }.getOrDefault(ResponseType.TEXT)
 
     // Validate name
     fun validateName(): Boolean {
