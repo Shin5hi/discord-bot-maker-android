@@ -583,10 +583,10 @@ private fun CommandEditorDialog(
     onSave: (BotCommand) -> Unit
 ) {
     val isEditing = existingCommand != null
-    var commandName by rememberSaveable(existingCommand?.name) { mutableStateOf(existingCommand?.name ?: "") }
-    var selectedTypeName by rememberSaveable(existingCommand?.name) { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
-    var responseContent by rememberSaveable(existingCommand?.name) { mutableStateOf(existingCommand?.responseContent ?: "") }
-    var nameError by rememberSaveable(existingCommand?.name) { mutableStateOf<String?>(null) }
+    var commandName by rememberSaveable { mutableStateOf(existingCommand?.name ?: "") }
+    var selectedTypeName by rememberSaveable { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
+    var responseContent by rememberSaveable { mutableStateOf(existingCommand?.responseContent ?: "") }
+    var nameError by rememberSaveable { mutableStateOf<String?>(null) }
     val selectedType = responseTypeFromNameOrDefault(selectedTypeName)
 
     // Validate name

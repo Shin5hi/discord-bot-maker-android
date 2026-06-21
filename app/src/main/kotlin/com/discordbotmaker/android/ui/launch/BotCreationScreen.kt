@@ -23,6 +23,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +52,13 @@ enum class DeployStep(val label: String, val icon: String, val index: Int) {
     DEPLOY("Deploy", "🚀", 2)
 }
 
+private val DeployStepSaver = Saver<DeployStep, String>(
+    save = { it.name },
+    restore = { savedName ->
+        runCatching { DeployStep.valueOf(savedName) }.getOrDefault(DeployStep.CONNECT)
+    }
+)
+
 // ─── Token Validation ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
@@ -75,12 +83,9 @@ fun BotCreationScreen(
     var token by remember { mutableStateOf("") }
     var botName by rememberSaveable { mutableStateOf("") }
     var showToken by rememberSaveable { mutableStateOf(false) }
-    var currentStepName by rememberSaveable { mutableStateOf(DeployStep.CONNECT.name) }
+    var currentStep by rememberSaveable(stateSaver = DeployStepSaver) { mutableStateOf(DeployStep.CONNECT) }
     var isDeploying by rememberSaveable { mutableStateOf(false) }
     var deployComplete by rememberSaveable { mutableStateOf(false) }
-    val currentStep = remember(currentStepName) {
-        runCatching { DeployStep.valueOf(currentStepName) }.getOrDefault(DeployStep.CONNECT)
-    }
     val isTokenValid = remember(token) { isTokenFormatValid(token) }
 
     Column(
@@ -113,7 +118,7 @@ fun BotCreationScreen(
                 onToggleVisibility = { showToken = !showToken },
                 onValidateAndProceed = {
                     if (isTokenValid) {
-                        currentStepName = DeployStep.CONFIG.name
+                        currentStep = DeployStep.CONFIG
                     }
                 }
             )
@@ -128,10 +133,10 @@ fun BotCreationScreen(
             ConfigStepContent(
                 botName = botName,
                 onBotNameChange = { botName = it },
-                onBack = { currentStepName = DeployStep.CONNECT.name },
+                onBack = { currentStep = DeployStep.CONNECT },
                 onProceed = {
                     if (botName.isNotBlank()) {
-                        currentStepName = DeployStep.DEPLOY.name
+                        currentStep = DeployStep.DEPLOY
                     }
                 }
             )
@@ -147,7 +152,7 @@ fun BotCreationScreen(
                 botName = botName,
                 isDeploying = isDeploying,
                 deployComplete = deployComplete,
-                onBack = { currentStepName = DeployStep.CONFIG.name },
+                onBack = { currentStep = DeployStep.CONFIG },
                 onDeploy = {
                     isDeploying = true
                     onDeploy(token, botName)
