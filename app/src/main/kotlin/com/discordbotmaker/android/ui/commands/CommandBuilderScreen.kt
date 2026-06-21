@@ -88,6 +88,11 @@ private fun responseTypeFromNameOrDefault(name: String): ResponseType =
         ResponseType.TEXT
     }
 
+private val ResponseTypeSaver = Saver<ResponseType, String>(
+    save = { it.name },
+    restore = { savedName -> responseTypeFromNameOrDefault(savedName) }
+)
+
 private val BotCommandSaver = Saver<BotCommand, List<String>>(
     save = { listOf(it.name, it.responseType.name, it.responseContent) },
     restore = { values -> restoreBotCommand(values, "BotCommandSaver") }
@@ -584,10 +589,11 @@ private fun CommandEditorDialog(
 ) {
     val isEditing = existingCommand != null
     var commandName by rememberSaveable { mutableStateOf(existingCommand?.name ?: "") }
-    var selectedTypeName by rememberSaveable { mutableStateOf((existingCommand?.responseType ?: ResponseType.TEXT).name) }
+    var selectedType by rememberSaveable(stateSaver = ResponseTypeSaver) {
+        mutableStateOf(existingCommand?.responseType ?: ResponseType.TEXT)
+    }
     var responseContent by rememberSaveable { mutableStateOf(existingCommand?.responseContent ?: "") }
     var nameError by rememberSaveable { mutableStateOf<String?>(null) }
-    val selectedType = responseTypeFromNameOrDefault(selectedTypeName)
 
     // Validate name
     fun validateName(): Boolean {
@@ -735,7 +741,7 @@ private fun CommandEditorDialog(
                         ResponseTypeChip(
                             type = type,
                             selected = selectedType == type,
-                            onClick = { selectedTypeName = type.name },
+                            onClick = { selectedType = type },
                             modifier = Modifier.weight(1f)
                         )
                     }
