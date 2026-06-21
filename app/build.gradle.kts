@@ -1,3 +1,4 @@
+// Use apply() here because the root build resolves Android/Kotlin plugins from buildscript classpath coordinates.
 apply(plugin = "com.android.application")
 apply(plugin = "org.jetbrains.kotlin.android")
 apply(plugin = "org.jetbrains.kotlin.plugin.compose")
