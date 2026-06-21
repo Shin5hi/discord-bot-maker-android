@@ -28,6 +28,7 @@ import com.discordbotmaker.android.ui.console.LiveConsoleViewModel
 import com.discordbotmaker.android.ui.dashboard.BotStatus
 import com.discordbotmaker.android.ui.dashboard.GridBottomNavBar
 import com.discordbotmaker.android.ui.dashboard.MainDashboardScreen
+import com.discordbotmaker.android.ui.stats.StatsDashboardScreen
 import com.discordbotmaker.android.ui.launch.BotCreationScreen
 import com.discordbotmaker.android.ui.library.ToolLibraryScreen
 import com.discordbotmaker.android.ui.splash.SplashScreen
@@ -41,6 +42,7 @@ object AppRoutes {
     const val DASHBOARD            = "dashboard"
     const val TOOL_LIBRARY         = "tool_library"
     const val SETTINGS             = "settings"
+    const val STATS_DASHBOARD      = "stats_dashboard"
     const val LIVE_CONSOLE         = "live_console"
     const val AUTO_MOD             = "auto_mod"
     const val COMMAND_BUILDER      = "command_builder"
@@ -95,6 +97,7 @@ fun AppNavGraph(
             NavHost(
                 navController = navController,
                 startDestination = AppRoutes.SPLASH,
+                // Legacy flow note: startDestination = AppRoutes.DASHBOARD
                 modifier = Modifier.fillMaxSize()
             ) {
                 composable(AppRoutes.SPLASH) {
@@ -152,7 +155,7 @@ fun AppNavGraph(
                     ToolLibraryScreen(
                         onToolSelected = { toolName ->
                             when (toolName) {
-                                "Asistente Orion" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
+                                "Asistente Orión" -> navController.navigate(AppRoutes.DOUBT_ASSISTANT) {
                                     launchSingleTop = true
                                 }
                                 else -> { }
@@ -163,6 +166,10 @@ fun AppNavGraph(
 
                 composable(AppRoutes.SETTINGS) {
                     SettingsPlaceholderScreen()
+                }
+
+                composable(AppRoutes.STATS_DASHBOARD) {
+                    StatsDashboardScreen()
                 }
 
                 composable(AppRoutes.LIVE_CONSOLE) {

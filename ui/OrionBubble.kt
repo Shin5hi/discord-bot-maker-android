@@ -91,6 +91,7 @@ fun OrionBubble(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(top = 2.dp)
                 ) {
+                    // Antenna lights above the robot face.
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
@@ -143,7 +144,7 @@ fun OrionBubble(
                     Spacer(Modifier.height(1.dp))
 
                     Text(
-                        text = "Orion",
+                        text = "Orión",
                         color = Color.White,
                         fontSize = 7.sp,
                         fontWeight = FontWeight.Bold,

@@ -74,7 +74,7 @@ private val serverTree = listOf(
         TreeChannel("polls", ChannelType.VOICE, description = "Create interactive polls with reactions"),
         TreeChannel("reminders", ChannelType.ANNOUNCEMENT, description = "Schedule timed announcements"),
         TreeChannel("ticket-system", ChannelType.TEXT, description = "Support ticket creation & management"),
-        TreeChannel("asistente-ori\u00f3n", ChannelType.STAGE, description = "AI-powered query assistant for bot help")
+        TreeChannel("asistente-orión", ChannelType.STAGE, description = "AI-powered query assistant for bot help")
     )),
     TreeCategory(name = "MUSIC & AUDIO", accentColor = AppColors.AccentMusic, channels = listOf(
         TreeChannel("music-player", ChannelType.AUDIO, description = "Stream from YouTube, Spotify, SoundCloud"),
@@ -98,13 +98,13 @@ private val serverTree = listOf(
 
 private fun channelIcon(type: ChannelType): String = when (type) {
     ChannelType.TEXT         -> "#"
-    ChannelType.VOICE        -> "\ud83d\udd0a"
-    ChannelType.ANNOUNCEMENT -> "\ud83d\udce2"
-    ChannelType.STAGE        -> "\ud83d\udce1"
-    ChannelType.FORUM        -> "\ud83d\udcac"
-    ChannelType.AUDIO        -> "\ud83c\udfa7"
-    ChannelType.BUNKER       -> "\ud83c\udff0"
-    ChannelType.HASH         -> "#\ufe0f\u20e3"
+    ChannelType.VOICE        -> "🔊"
+    ChannelType.ANNOUNCEMENT -> "📢"
+    ChannelType.STAGE        -> "📡"
+    ChannelType.FORUM        -> "💬"
+    ChannelType.AUDIO        -> "🎧"
+    ChannelType.BUNKER       -> "🏰"
+    ChannelType.HASH         -> "#️⃣"
 }
 
 @Composable
@@ -114,7 +114,7 @@ fun ToolLibraryScreen(onToolSelected: (String) -> Unit = {}) {
         Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp)) {
             Surface(color = AppColors.InputBackground, shape = RoundedCornerShape(4.dp), modifier = Modifier.fillMaxWidth()) {
                 Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "\ud83d\udd0d", fontSize = 13.sp, color = AppColors.TextMuted)
+                    Text(text = "🔍", fontSize = 13.sp, color = AppColors.TextMuted)
                     Spacer(Modifier.width(8.dp))
                     Text(text = "Search", color = AppColors.TextMuted, fontSize = 13.sp, fontFamily = FontFamily.SansSerif)
                 }
@@ -126,7 +126,7 @@ fun ToolLibraryScreen(onToolSelected: (String) -> Unit = {}) {
             serverTree.forEachIndexed { _, category ->
                 ServerTreeCategorySection(category = category, onChannelSelected = { channelName ->
                     val toolName = channelName.replace("-", " ").split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
-                    onToolSelected(if (channelName == "asistente-ori\u00f3n") "Asistente Ori\u00f3n" else toolName)
+                    onToolSelected(if (channelName == "asistente-orión") "Asistente Orión" else toolName)
                 })
             }
         }
@@ -160,10 +160,10 @@ private fun ServerTreeHeader() {
 
 @Composable
 private fun FeaturedOrionBanner(onToolSelected: (String) -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth().clickable { onToolSelected("Asistente Ori\u00f3n") }.background(AppColors.Primary.copy(alpha = 0.06f)).padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = "\ud83d\udce1", fontSize = 14.sp)
+    Row(modifier = Modifier.fillMaxWidth().clickable { onToolSelected("Asistente Orión") }.background(AppColors.Primary.copy(alpha = 0.06f)).padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(text = "📡", fontSize = 14.sp)
         Spacer(Modifier.width(8.dp))
-        Text(text = "Asistente Ori\u00f3n", color = AppColors.Primary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif, modifier = Modifier.weight(1f))
+        Text(text = "Asistente Orión", color = AppColors.Primary, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif, modifier = Modifier.weight(1f))
         Surface(color = AppColors.Success.copy(alpha = 0.15f), shape = RoundedCornerShape(3.dp)) {
             Text(text = "NEW", color = AppColors.Success, fontSize = 9.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp, modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp))
         }

@@ -52,7 +52,7 @@ fun DoubtAssistantScreen() {
             listOf(
                 ChatMessage(
                     role = MessageRole.ASSISTANT,
-                    content = "Orion online. Ask me anything about your bot. \u26a1"
+                    content = "Orión online. Ask me anything about your bot. ⚡"
                 )
             )
         )
@@ -107,11 +107,11 @@ private fun DoubtAssistantHeader() {
     Surface(color = AppColors.Surface, tonalElevation = 0.dp, modifier = Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 16.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.size(40.dp).clip(CircleShape).background(AppColors.Primary.copy(alpha = 0.12f)), contentAlignment = Alignment.Center) {
-                Text(text = "\ud83d\udce1", fontSize = 20.sp)
+                Text(text = "📡", fontSize = 20.sp)
             }
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = "Asistente Ori\u00f3n", color = AppColors.TextPrimary, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif)
+                Text(text = "Asistente Orión", color = AppColors.TextPrimary, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif)
                 Spacer(Modifier.height(2.dp))
                 Text(text = "Ask anything about your bot setup", color = AppColors.TextSecondary, fontSize = 13.sp, fontWeight = FontWeight.Normal, fontFamily = FontFamily.SansSerif)
             }
@@ -142,9 +142,9 @@ private fun AssistantMessageCard(content: String) {
     Card(modifier = Modifier.widthIn(max = 320.dp), shape = RoundedCornerShape(topStart = 4.dp, topEnd = 12.dp, bottomStart = 12.dp, bottomEnd = 12.dp), colors = CardDefaults.cardColors(containerColor = AppColors.SurfaceVariant), elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(modifier = Modifier.size(18.dp).clip(CircleShape).background(AppColors.AccentBrain.copy(alpha = 0.15f)), contentAlignment = Alignment.Center) { Text(text = "\ud83e\udd16", fontSize = 10.sp) }
+                Box(modifier = Modifier.size(18.dp).clip(CircleShape).background(AppColors.AccentBrain.copy(alpha = 0.15f)), contentAlignment = Alignment.Center) { Text(text = "🤖", fontSize = 10.sp) }
                 Spacer(Modifier.width(6.dp))
-                Text(text = "Ori\u00f3n", color = AppColors.AccentBrain, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif)
+                Text(text = "Orión", color = AppColors.AccentBrain, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, fontFamily = FontFamily.SansSerif)
             }
             Spacer(Modifier.height(6.dp))
             Text(text = content, color = AppColors.TextPrimary, fontSize = 14.sp, fontFamily = FontFamily.SansSerif, lineHeight = 18.sp)
@@ -179,7 +179,7 @@ private fun ChatInputBar(value: String, onValueChange: (String) -> Unit, onSend:
                 }
                 Spacer(Modifier.width(10.dp))
                 Surface(color = if (value.isNotBlank() && isEnabled) AppColors.Primary else AppColors.PrimaryDim.copy(alpha = 0.5f), shape = CircleShape, tonalElevation = 0.dp, modifier = Modifier.size(42.dp), onClick = { if (value.isNotBlank() && isEnabled) onSend() }) {
-                    Box(contentAlignment = Alignment.Center) { Text(text = "\u27a4", color = AppColors.TextPrimary, fontSize = 18.sp) }
+                    Box(contentAlignment = Alignment.Center) { Text(text = "➤", color = AppColors.TextPrimary, fontSize = 18.sp) }
                 }
             }
         }
@@ -189,14 +189,14 @@ private fun ChatInputBar(value: String, onValueChange: (String) -> Unit, onSend:
 private fun generateMockResponse(query: String): String {
     val lowerQuery = query.lowercase()
     return when {
-        "command" in lowerQuery || "slash" in lowerQuery -> "Open **Command Builder**. Define name \u2192 options \u2192 response. Supports strings, ints, bools, users, channels, roles."
-        "mod" in lowerQuery || "ban" in lowerQuery || "mute" in lowerQuery -> "**AutoMod** \u2192 Gemini-powered filter. Set sensitivity, actions (warn \u2192 delete \u2192 mute \u2192 ban). Whitelist trusted roles in settings."
+        "command" in lowerQuery || "slash" in lowerQuery -> "Open **Command Builder**. Define name → options → response. Supports strings, ints, bools, users, channels, roles."
+        "mod" in lowerQuery || "ban" in lowerQuery || "mute" in lowerQuery -> "**AutoMod** → Gemini-powered filter. Set sensitivity, actions (warn → delete → mute → ban). Whitelist trusted roles in settings."
         "music" in lowerQuery || "song" in lowerQuery || "play" in lowerQuery -> "**Music Player**: YouTube, Spotify, SoundCloud. Queue, vote-skip, 24/7 radio. Needs Voice Connect permission."
-        "deploy" in lowerQuery || "host" in lowerQuery || "launch" in lowerQuery -> "1. Token Connect \u2192 add token\n2. Tool Library \u2192 configure\n3. Quick Deploy \u2192 push\nBot stays online 24/7."
-        "token" in lowerQuery || "connect" in lowerQuery -> "**Launch & Deploy \u2192 Token Connect**. Stored via Android Keystore. Compromised? Regenerate in Discord Dev Portal immediately."
+        "deploy" in lowerQuery || "host" in lowerQuery || "launch" in lowerQuery -> "1. Token Connect → add token\n2. Tool Library → configure\n3. Quick Deploy → push\nBot stays online 24/7."
+        "token" in lowerQuery || "connect" in lowerQuery -> "**Launch & Deploy → Token Connect**. Stored via Android Keystore. Compromised? Regenerate in Discord Dev Portal immediately."
         "welcome" in lowerQuery || "greet" in lowerQuery -> "**Welcome System**: custom join messages. Supports {user}, {server}, {count} placeholders. Embed-ready."
         "status" in lowerQuery || "online" in lowerQuery -> "Status: Active. 3 blocks. Need logs?"
         "help" in lowerQuery || "what can" in lowerQuery -> "I cover: commands, moderation, music, deploy, analytics, config. Just ask."
-        else -> "Bot setup \u00b7 Commands \u00b7 Moderation \u00b7 Music \u00b7 Analytics \u00b7 Config \u2014 pick a topic or ask directly."
+        else -> "Bot setup · Commands · Moderation · Music · Analytics · Config — pick a topic or ask directly."
     }
 }
