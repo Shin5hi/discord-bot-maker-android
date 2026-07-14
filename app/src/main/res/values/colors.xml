@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- DISCORD OFFICIAL COLORS (Verified HiFi) -->
+
+    <!-- Background & Surfaces -->
+    <color name="background">#313338</color>
+    <color name="surface">#2B2D31</color>
+    <color name="surface_variant">#232428</color>
+    <color name="input_background">#1E1F22</color>
+    <color name="surface_overlay">#111214</color>
+
+    <!-- Primary Accent (Blurple - Grid Brand) -->
+    <color name="blurple">#5865F2</color>
+    <color name="blurple_light">#7984F5</color>
+    <color name="blurple_dim">#4752C4</color>
+    <color name="blurple_subtle">#0D0E1A</color> <!-- 12% alpha version of blurple -->
+
+    <!-- Semantic Colors -->
+    <color name="success">#23A559</color>
+    <color name="warning">#FAA81A</color>
+    <color name="error">#F23F43</color>
+    <color name="info">#5865F2</color>
+
+    <!-- Text Hierarchy -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B5BAC1</color>
+    <color name="text_muted">#80848E</color>
+    <color name="text_link">#00A8FC</color>
+
+    <!-- Utility -->
+    <color name="divider">#3F4147</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Accents for Different Modules -->
+    <color name="accent_rocket">#57F287</color>
+    <color name="accent_shield">#FEE75C</color>
+    <color name="accent_brain">#EB459E</color>
+    <color name="accent_bolt">#5865F2</color>
+    <color name="accent_music">#ED4245</color>
+    <color name="accent_gear">#99AAB5</color>
+    <color name="accent_chart">#3BA55D</color>
+</resources>
